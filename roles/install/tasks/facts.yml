@@ -1,0 +1,54 @@
+# roles/install/tasks/facts.yml
+# =============================
+#
+# Copying
+# -------
+#
+# Copyright (c) 2022 universe.hashicorp authors and contributors.
+#
+# This file is part of the *universe.hashicorp* project.
+#
+# *universe.hashicorp* is a free software project. You can redistribute it
+# and/or modify it following the terms of the MIT License.
+#
+# This software project is distributed *as is*, WITHOUT WARRANTY OF ANY KIND;
+# including but not limited to the WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+# PARTICULAR PURPOSE and NONINFRINGEMENT.
+#
+# You should have received a copy of the MIT License along with
+# *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
+#
+- name: "Look for package binary"
+  ansible.builtin.stat:
+    path: "{{ install_package_directory.install }}/{{ install_package_name }}"
+  register: "_install_package_binary"
+
+- name: "Look for package service"  # noqa: args[module]
+  when: "_install_package_binary.stat.exists"
+  ansible.builtin.service:
+    name: "{{ install_package_name }}.service"
+  register: "_install_package_service"
+
+- name: "Installed package version"
+  when: "_install_package_binary.stat.exists"
+  ansible.builtin.command:
+    cmd: "{{ install_package_directory.install }}/{{ install_package_name }} --version"
+  register: "_install_package_version"
+  changed_when: "_install_package_version.rc == 0"
+
+- name: "Register package facts"
+  ansible.builtin.set_fact:
+    system_package: >-
+      {{ system_package | default({}) | combine({item[0]: item[1]}) }}
+  loop: "{{ (keys | zip(values)) | list }}"
+  vars:
+    keys:
+      - "name"
+      - "exists"
+      - "service"
+      - "version"
+    values:
+      - "{{ install_package_name }}"
+      - "{{ _install_package_binary.stat.exists }}"
+      - "{{ _install_package_service }}"
+      - "{{ _install_package_version.stdout | default('') }}"
