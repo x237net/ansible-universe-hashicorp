@@ -8,8 +8,8 @@
 #
 # This file is part of the *universe.hashicorp* project.
 #
-# *universe.hashicorp* is a free software project. You can redistribute it and/or
-# modify it following the terms of the MIT License.
+# *universe.hashicorp* is a free software project. You can redistribute it
+# and/or modify it following the terms of the MIT License.
 #
 # This software project is distributed *as is*, WITHOUT WARRANTY OF ANY KIND;
 # including but not limited to the WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
@@ -19,5 +19,10 @@
 # *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
 #
 plugins:
+  # MD003: Heading style should be consistent throughout the document.
+  md003:
+    enabled: true
+    style: "setext_with_atx"
+  # MD041: First line in file should be a top-level heading.
   md041:
     enabled: false
