@@ -1,0 +1,57 @@
+{# roles/nomad_install/templates/systemd/nomad.service.j2
+ # ======================================================
+ #
+ # Copying
+ # -------
+ #
+ # Copyright (c) 2022 universe.hashicorp authors and contributors.
+ #
+ # This file is part of the *universe.hashicorp* project.
+ #
+ # *universe.hashicorp* is a free software project. You can redistribute it
+ # and/or modify it following the terms of the MIT License.
+ #
+ # This software project is distributed *as is*, WITHOUT WARRANTY OF ANY KIND;
+ # including but not limited to the WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ # PARTICULAR PURPOSE and NONINFRINGEMENT.
+ #
+ # You should have received a copy of the MIT License along with
+ # *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
+ #}
+[Unit]
+Description="Hashicorp Nomad - A simple and flexible workload orchestrator"
+Documentation=https://nomadproject.io/docs/
+After=consul.service
+After=local-fs.target
+After=network.target
+After=remote-fs.target
+Wants=consul.service
+Wants=local-fs.target
+
+StartLimitBurst=3
+StartLimitIntervalSec=6
+
+[Service]
+Environment="DAEMON_ARGS=-config {{ nomad_install_directory.config }}"
+EnvironmentFile=-{{ dirs_prefix }}/etc/default/%p
+
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStart={{ nomad_install_directory.install }}/{{ nomad_install_package_name }} agent $DAEMON_ARGS
+ExecStartPost=-/bin/sh -c 'for D in 9 8 7 6 5 4 3 2 1; do {{ nomad_install_directory.install }}/{{ nomad_install_package_name }} node drain -disable -self -yes && break || sleep $${D}; done'
+ExecStop=-{{ nomad_install_directory.install }}/{{ nomad_install_package_name }} node drain -enable -self -force -yes
+KillSignal=SIGINT
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=5m
+
+LimitNOFILE=infinity
+LimitNPROC=infinity
+TasksMax=infinity
+
+NoNewPrivileges=true
+PrivateDevices=true
+ProtectSystem=true
+ProtectKernelTunables=false
+
+[Install]
+WantedBy=multi-user.target
