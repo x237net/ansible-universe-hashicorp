@@ -1,0 +1,40 @@
+# roles/install/handlers/main.yml
+# ===============================
+#
+# Copying
+# -------
+#
+# Copyright (c) 2022 universe.hashicorp authors and contributors.
+#
+# This file is part of the *universe.hashicorp* project.
+#
+# *universe.hashicorp* is a free software project. You can redistribute it
+# and/or modify it following the terms of the MIT License.
+#
+# This software project is distributed *as is*, WITHOUT WARRANTY OF ANY KIND;
+# including but not limited to the WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+# PARTICULAR PURPOSE and NONINFRINGEMENT.
+#
+# You should have received a copy of the MIT License along with
+# *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
+#
+- name: "Service refresh"
+  ansible.builtin.systemd:
+    daemon_reload: true
+  listen: "service-installed"
+
+- name: "Service restart"
+  when: >-
+    system_package.service.status is defined
+    and system_package.service.status.ActiveState == "active"
+  ansible.builtin.service:
+    name: "{{ system_package.service.name }}"
+    state: "restarted"
+  listen: "service-installed"
+
+- name: "Workdir cleanup"
+  when: "_install_workdir is defined"
+  ansible.builtin.file:
+    path: "{{ _package_workdir.path }}"
+    state: "absent"
+  listen: "service-installed"

@@ -1,0 +1,147 @@
+# roles/install/tasks/install.yml
+# ===============================
+#
+# Copying
+# -------
+#
+# Copyright (c) 2022 universe.hashicorp authors and contributors.
+#
+# This file is part of the *universe.hashicorp* project.
+#
+# *universe.hashicorp* is a free software project. You can redistribute it
+# and/or modify it following the terms of the MIT License.
+#
+# This software project is distributed *as is*, WITHOUT WARRANTY OF ANY KIND;
+# including but not limited to the WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+# PARTICULAR PURPOSE and NONINFRINGEMENT.
+#
+# You should have received a copy of the MIT License along with
+# *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
+#
+- name: "Do not allow the a user to be in the 'root' group"
+  when: "install_system_username != 'root' and install_system_groupname == 'root'"
+  block:
+    - name: "Fail on user in group 'root'"
+      ansible.builtin.fail:
+        msg: "Trying to add user '{{ install_system_username }}' in group '{{ install_system_groupname }}'."
+  rescue:
+    - name: "Cleaning up"
+      ansible.builtin.debug:
+        msg: "Cleaning"
+      notify: "workdir-cleanup"
+      changed_when: true
+
+- name: "Ensure system user and group are present"
+  when: "install_system_username != 'root' and install_system_groupname != 'root'"
+  block:
+    - name: "Create group"
+      ansible.builtin.group:
+        name: "{{ install_system_groupname }}"
+        system: true
+        state: "present"
+
+    - name: "Create user"
+      ansible.builtin.user:
+        name: "{{ install_system_username }}"
+        group: "{{ install_system_groupname }}"
+        create_home: false
+        home: "{{ install_package_directory.state }}"
+        password: "!"
+        password_lock: true
+        shell: "/sbin/nologin"
+        system: true
+        state: "present"
+  rescue:
+    - name: "Cleaning up"
+      ansible.builtin.debug:
+        msg: "Cleaning"
+      notify: "workdir-cleanup"
+      changed_when: true
+
+- name: "Install binary"
+  when: "_install_workdir is defined"
+  block:
+    - name: "Copy binary to its final location"
+      ansible.builtin.copy:
+        src: "{{ _install_workdir.path }}/{{ install_package_name }}"
+        dest: "{{ install_package_directory.install }}/{{ install_package_name }}-{{ install_package_version }}"
+        group: "{{ install_system_groupname }}"
+        owner: "{{ install_system_username }}"
+        remote_src: true
+        setype: "bin_t"
+        mode: "0550"
+
+    - name: "Update link to new binary"
+      ansible.builtin.file:
+        path: "{{ install_package_directory.install }}/{{ install_package_name }}"
+        src: "{{ install_package_directory.install }}/{{ install_package_name }}-{{ install_package_version }}"
+        state: "link"
+  rescue:
+    - name: "Cleaning up"
+      ansible.builtin.debug:
+        msg: "Cleaning"
+      notify: "workdir-cleanup"
+      changed_when: true
+
+- name: "Prepare environment"
+  block:
+    - name: "Create configuration directory"
+      ansible.builtin.file:
+        path: "{{ install_package_directory.config }}"
+        state: "directory"
+        group: "{{ install_system_groupname }}"
+        owner: "{{ install_system_username }}"
+        mode: "0750"
+        setype: "etc_t"
+
+    - name: "Create state directory"
+      ansible.builtin.file:
+        path: "{{ install_package_directory.state }}"
+        state: "directory"
+        group: "{{ install_system_groupname }}"
+        owner: "{{ install_system_username }}"
+        mode: "0750"
+        setype: "var_t"
+  rescue:
+    - name: "Cleaning up"
+      ansible.builtin.debug:
+        msg: "Cleaning"
+      notify: "workdir-cleanup"
+      changed_when: true
+
+- name: "Setup service"
+  when: "install_package_service_content"
+  block:
+    - name: "Ensure systemd service directory"
+      ansible.builtin.file:
+        path: "{{ dirs_prefix }}/lib/systemd/system"
+        state: "directory"
+        group: "root"
+        owner: "root"
+        mode: "0755"
+        setype: "systemd_unit_file_t"
+
+    - name: "Install service unit file"
+      ansible.builtin.copy:
+        content: "{{ install_package_service_content }}"
+        dest: "{{ dirs_prefix }}/lib/systemd/system/{{ install_package_name }}.service"
+        group: "root"
+        owner: "root"
+        mode: "0644"
+        setype: "systemd_unit_file_t"
+  rescue:
+    - name: "Cleaning up"
+      ansible.builtin.debug:
+        msg: "Cleaning"
+      notify: "workdir-cleanup"
+      changed_when: true
+
+- name: "Refresh and cleanup environment"
+  ansible.builtin.debug:
+    msg: "Refresh and cleanup"
+  notify: "service-installed"
+  changed_when: true
+
+# Call handlers to complete installation.
+- name: "Flush handlers"
+  ansible.builtin.meta: "flush_handlers"
