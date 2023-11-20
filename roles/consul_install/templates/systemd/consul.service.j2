@@ -1,0 +1,52 @@
+{# roles/consul_install/templates/systemd/consul.service.j2
+ # ========================================================
+ #
+ # Copying
+ # -------
+ #
+ # Copyright (c) 2022 universe.hashicorp authors and contributors.
+ #
+ # This file is part of the *universe.hashicorp* project.
+ #
+ # *universe.hashicorp* is a free software project. You can redistribute it
+ # and/or modify it following the terms of the MIT License.
+ #
+ # This software project is distributed *as is*, WITHOUT WARRANTY OF ANY KIND;
+ # including but not limited to the WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ # PARTICULAR PURPOSE and NONINFRINGEMENT.
+ #
+ # You should have received a copy of the MIT License along with
+ # *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
+ #}
+[Unit]
+Description="HashiCorp Consul - A service mesh solution"
+Documentation=https://www.consul.io/docs/
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Environment="DAEMON_ARGS=-config-dir={{ consul_install_directory.config }} -data-dir={{ consul_install_directory.state }}"
+EnvironmentFile=-{{ dirs_prefix }}/etc/default/%p
+
+User={{ consul_install_system_username }}
+Group={{ consul_install_system_groupname }}
+
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStart={{ consul_install_directory.install }}/consul agent $DAEMON_ARGS
+KillSignal=SIGINT
+Restart=on-failure
+
+{% if consul_install_dns_port | default(0) == 53 %}
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+SecureBits=keep-caps
+{% endif %}
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateTmp=yes
+ProtectHome=read-only
+ProtectKernelTunables=true
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target
