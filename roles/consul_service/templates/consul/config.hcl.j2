@@ -1,0 +1,88 @@
+{# roles/consul_service/templates/consul/config.hcl.j2
+ # ===================================================
+ #
+ # Copying
+ # -------
+ #
+ # Copyright (c) 2022 universe.hashicorp authors and contributors.
+ #
+ # This file is part of the *universe.hashicorp* project.
+ #
+ # *universe.hashicorp* is a free software project. You can redistribute it
+ # and/or modify it following the terms of the MIT License.
+ #
+ # This software project is distributed *as is*, WITHOUT WARRANTY OF ANY KIND;
+ # including but not limited to the WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ # PARTICULAR PURPOSE and NONINFRINGEMENT.
+ #
+ # You should have received a copy of the MIT License along with
+ # *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
+ #}
+bind_addr = "{{ consul_service_cluster_bind_address }}"
+client_addr = "{{ consul_service_bind_address }}"
+{% if consul_service_addresses %}
+addresses {
+    {% for x in consul_service_addresses | dict2items %}
+    {{ x.key }} = "{{ x.value }}"
+    {% endfor %} {# consul_service_addresses #}
+}
+{% endif %} {# consul_service_addresses #}
+
+data_dir = "{{ consul_service_directory.state }}"
+datacenter = "{{ consul_service_datacenter }}"
+primary_datacenter = "{{ consul_service_primary_datacenter }}"
+server = true
+
+{% if (consul_service_servers | default([]) | length) > 1 %}
+bootstrap_expect = {{ (consul_service_servers | length) + 1 }}
+retry_join = [
+    {% for x in consul_service_servers | shuffle %}
+    "{{ x }}",
+    {% endfor %} {# consul_service_servers #}
+]
+{% else %}
+bootstrap_expect = 1
+{% endif %} {# consul_service_servers #}
+
+ports {
+    {% for x in consul_service_port | dict2items(key_name='name', value_name='info') %}
+    {% set description = x.info.description %}
+    {% set protocol = x.name | replace('consul_', '') %}
+    {% set port = x.info.ports.0.port %}
+    {% if consul_service_use_tls and protocol == "http" %}
+        {% set port = -1 %}
+    {% endif %} {# consul_service_use_tls and protocol == "http" #}
+    {% if not consul_service_use_tls and protocol == "https" %}
+        {% set port = -1 %}
+    {% endif %} {# consul_service_use_tls and protocol == "https" #}
+    # {{ description }}
+    {{ protocol }} = {{ port }}
+    {% endfor %} {# consul_service_port #}
+}
+
+ui_config {
+    enabled = {{ consul_service_ui_enabled | lower }}
+}
+
+{% if consul_service_use_tls %}
+tls {
+    defaults {
+        {% if consul_service_tls.ca_file is defined %}
+        ca_file = "{{ consul_service_tls.ca_file }}"
+        {% endif %} {# consul_service_tls.ca_file #}
+        {% if consul_service_tls.ca_path is defined %}
+        ca_path = "{{ consul_service_tls.ca_path }}"
+        {% endif %} {# consul_service_tls.ca_path #}
+
+        cert_file = "{{ consul_service_tls.cert_file }}"
+        key_file = "{{ consul_service_tls.key_file }}"
+        tls_cipher_suites = "{% for x in consul._tls_ciphers %}{{ x }}{{ loop.last | ternary('', ',') }}{% endfor %}"
+        tls_min_version = "TLSv1_2"
+
+        {% if consul_service_tls.ca_file is defined or consul_service_tls.ca_path is defined %}
+        verify_incoming = true
+        verify_outgoing = true
+        {% endif %} {# consul_service_tls.ca_file or consul_service_tls.ca_path #}
+    }
+}
+{% endif %} {# consul_service_use_tls #}
