@@ -1,5 +1,5 @@
-# roles/nomad_service/vars/main.yml
-# =================================
+# roles/nomad_vars/vars/main.yml
+# ==============================
 #
 # Copying
 # -------
@@ -18,31 +18,31 @@
 # You should have received a copy of the MIT License along with
 # *universe/staging*. If not, see <http://opensource.org/licenses/MIT>.
 #
-nomad_service_package_name: "nomad"
-nomad_service_systemd_unit: "{{ nomad_service_package_name }}.service"
+nomad_vars_package_name: "nomad"
+nomad_vars_systemd_unit: "{{ nomad_vars_package_name }}.service"
 
-nomad_service_directory:
-  config: "{{ dirs_prefix }}/etc/{{ nomad_service_package_name }}.d"
+nomad_vars_directory:
+  config: "{{ dirs_prefix }}/etc/{{ nomad_vars_package_name }}.d"
   install: "{{ dirs_prefix }}/sbin"
-  state: "{{ dirs_localstatedir }}/{{ nomad_service_package_name }}"
+  state: "{{ dirs_localstatedir }}/{{ nomad_vars_package_name }}"
 
-nomad_service_ports:
+nomad_vars_port:
   http:
     description: "Provide UI and API access to Nomad agents."
-    port: "{{ nomad_service_http_port }}"
+    port: "{{ nomad_vars_port_http }}"
     protocols: ["tcp"]
 
   rpc:
     description: "RPC protocol used by Nomad agents."
-    port: "{{ nomad_service_rpc_port }}"
+    port: "{{ nomad_vars_port_rpc }}"
     protocols: ["tcp"]
 
   serf:
     description: "Gossip protocol to manage server membership using Serf."
-    port: "{{ nomad_service_serf_port }}"
+    port: "{{ nomad_vars_port_serf }}"
     protocols: ["tcp", "udp"]
 
-nomad_service_tls_ciphers:
+nomad_vars_tls_ciphers:
   - "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256"
   - "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
   - "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384"

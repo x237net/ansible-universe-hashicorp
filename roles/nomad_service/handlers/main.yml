@@ -20,12 +20,12 @@
 #
 - name: "service-reload"
   ansible.builtin.service:
-    name: "{{ nomad_service_systemd_unit }}"
+    name: "{{ nomad_vars_systemd_unit }}"
     state: "reloaded"
 
 - name: "service-start"
   ansible.builtin.service:
-    name: "{{ nomad_service_systemd_unit }}"
+    name: "{{ nomad_vars_systemd_unit }}"
     state: "started"
     enabled: true
   when: "nomad_service_start"

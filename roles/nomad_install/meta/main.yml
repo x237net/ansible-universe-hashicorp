@@ -19,10 +19,8 @@
 # *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
 #
 dependencies:
-  - role: "universe.unix.dirs"
-
   - role: "universe.hashicorp.consul_install"
-
+  - role: "universe.hashicorp.nomad_vars"
   - role: "universe.hashicorp.install"
     vars:
       install_package_service_content: >-

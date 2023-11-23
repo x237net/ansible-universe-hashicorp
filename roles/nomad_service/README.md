@@ -28,6 +28,14 @@ Purpose
 The `universe.hashicorp.nomad_service` role configures [Hashicorp Nomad](
 https://www.nomadproject.io/), a workload orchestrator.
 
+Dependencies
+------------
+
+This role depends on the following roles:
+
+`universe.hashicorp.nomad_vars`
+: For common Hashicorp Nomad configuration variables.
+
 Variables
 ---------
 
@@ -53,10 +61,6 @@ services.
 `nomad_service_class` (Default: `""`)
 : An arbitrary string used to logically group client nodes.
 
-`nomad_service_is_client` (Default: `false`)
-: Configures the Hashicorp Nomad agent to accept jobs as assigned by the
-Hashicorp Nomad server.
-
 `nomad_service_datacenter` (Default: `"dc1"`)
 : Specifies the data center of the local agent.
 
@@ -64,25 +68,19 @@ Hashicorp Nomad server.
 : A list of [task drivers](https://developer.hashicorp.com/nomad/docs/drivers)
 supported by the Hashicorp Nomad client.
 
-`nomad_service_http_port` (Default: `4646`)
-: The HTTP port to provide UI and API access to Hashicorp Nomad agents.
+`nomad_service_is_client` (Default: `false`)
+: Configures the Hashicorp Nomad agent to accept jobs as assigned by the
+Hashicorp Nomad server.
+
+`nomad_service_is_server` (Default: `false`)
+: Configures the Hashicorp Nomad agent to operate in server mode to participate
+in scheduling decisions.
 
 `nomad_service_pool` (Default: `""`)
 : Specifies the node pool in which the client is registered.
 
 `nomad_service_region` (Default: `"global"`)
 : Specifies the region the Hashicorp Nomad agent is a member of.
-
-`nomad_service_rpc_port` (Default: `4647`)
-: The RPC protocol port used by Hashicorp Nomad agents.
-
-`nomad_service_serf_port` (Default: `4648`)
-: The Gossip protocol port to manage Hashicorp Nomad server membership using
-Serf.
-
-`nomad_service_is_server` (Default: `false`)
-: Configures the Hashicorp Nomad agent to operate in server mode to participate
-in scheduling decisions.
 
 `nomad_service_service_start` (Default: `true`)
 : Should the Hashicorp Nomad service be started?

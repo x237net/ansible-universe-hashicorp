@@ -20,7 +20,7 @@
  #}
 region = "{{ nomad_service_region }}"
 datacenter = "{{ nomad_service_datacenter }}"
-data_dir = "{{ nomad_service_directory.state }}"
+data_dir = "{{ nomad_vars_directory.state }}"
 disable_update_check = true
 
 {% if nomad_service_bind_address %}
@@ -40,10 +40,10 @@ consul {
 }
 
 ports {
-    {% for x in noamd_service_ports | dict2items(key_name='name', value_name='port') %}
+    {% for x in noamd_vars_port | dict2items(key_name='name', value_name='port') %}
     # {{ x.port.description }}
     {{ x.name }} = {{ x.port.port }}
-    {% endfor %} {# nomad_service_ports #}
+    {% endfor %} {# nomad_vars_port #}
 }
 
 {% if nomad_service_use_tls %}
@@ -56,7 +56,7 @@ tls {
     ca_file = "{{ nomad_service_tls.ca_file }}"
     cert_file = "{{ nomad_service_tls.cert_file }}"
     key_file = "{{ nomad_service_tls.key_file }}"
-    tls_cipher_suites = "{% for x in nomad_service_tls_ciphers %}{{ x }}{{ loop.last | ternary('', ',') }}{% endfor %}"
+    tls_cipher_suites = "{% for x in nomad_vars_tls_ciphers %}{{ x }}{{ loop.last | ternary('', ',') }}{% endfor %}"
     tls_min_version = "tls12"
     tls_prefer_server_cipher_suites = false
 }

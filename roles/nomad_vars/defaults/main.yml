@@ -1,5 +1,5 @@
-# roles/nomad_service/meta/main.yml
-# =================================
+# roles/nomad_vars/defaults/main.yml
+# ==================================
 #
 # Copying
 # -------
@@ -18,5 +18,9 @@
 # You should have received a copy of the MIT License along with
 # *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
 #
-dependencies:
-  - role: "universe.hashicorp.nomad_vars"
+nomad_vars_system_username: "root"
+nomad_vars_system_groupname: "{{ nomad_vars_system_username }}"
+
+nomad_vars_port_http: 4646
+nomad_vars_port_rpc: 4647
+nomad_vars_port_serf: 4648

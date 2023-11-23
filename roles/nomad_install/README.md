@@ -31,11 +31,11 @@ Dependencies
 
 This role depends on the following roles:
 
-`universe.unix.dirs`
-: To get installation directories of the system.
-
 `universe.hashicorp.consul_install`
 : To install Consul along with Nomad.
 
 `universe.hashicorp.install`
 : To install Nomad on the system.
+
+`universe.hashicorp.nomad_vars`
+: For common Hashicorp Nomad configuration variables.
