@@ -1,0 +1,61 @@
+# roles/nomad_service/tasks/configure.yml
+# =======================================
+#
+# Copying
+# -------
+#
+# Copyright (c) 2022 universe.hashicorp authors and contributors.
+#
+# This file is part of the *universe.hashicorp* project.
+#
+# *universe.hashicorp* is a free software project. You can redistribute it
+# and/or modify it following the terms of the MIT License.
+#
+# This software project is distributed *as is*, WITHOUT WARRANTY OF ANY KIND;
+# including but not limited to the WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+# PARTICULAR PURPOSE and NONINFRINGEMENT.
+#
+# You should have received a copy of the MIT License along with
+# *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
+#
+- name: "Install Hashicorp Nomad global configuration"
+  ansible.builtin.template:
+    src: "nomad/nomad.hcl.j2"
+    dest: "{{ nomad_service_directory.config }}/00-nomad.hcl"
+    group: "{{ nomad_service_system_groupname }}"
+    owner: "{{ nomad_service_system_username }}"
+    mode: "0640"
+  notify: "service-reload"
+
+- name: "Install Hashicorp Nomad server configuration"
+  ansible.builtin.template:
+    src: "nomad/server.hcl.j2"
+    dest: "{{ nomad_service_directory.config }}/10-server.hcl"
+    group: "{{ nomad_service_system_groupname }}"
+    owner: "{{ nomad_service_system_username }}"
+    mode: "0640"
+  notify: "service-reload"
+  when: "nomad_service_is_server"
+
+- name: "Install Hashicorp Nomad client configuration"
+  ansible.builtin.template:
+    src: "nomad/client.hcl.j2"
+    dest: "{{ nomad_service_directory.config }}/20-client.hcl"
+    group: "{{ nomad_service_system_groupname }}"
+    owner: "{{ nomad_service_system_username }}"
+    mode: "0640"
+  notify: "service-reload"
+  when: "nomad_service_is_client"
+
+- name: "Install Hashicorp Nomad driver configuration"
+  ansible.builtin.template:
+    src: "nomad/{{ item }}.hcl.j2"
+    dest: "{{ nomad_service_directory.config }}/50-{{ item }}.hcl"
+    group: "{{ nomad_service_system_groupname }}"
+    owner: "{{ nomad_service_system_username }}"
+    mode: "0640"
+  loop: "{{ nomad_service_drivers | list }}"
+  notify: "service-reload"
+  when:
+    - "nomad_service_is_client"
+    - "([role_path, 'templates', 'nomad', item ~ '.hcl.j2'] | path_join) is file"

@@ -1,0 +1,63 @@
+{# roles/nomad_service_service/templates/nomad/nomad.hcl.j2
+ # ================================================
+ #
+ # Copying
+ # -------
+ #
+ # Copyright (c) 2022 universe.hashicorp authors and contributors.
+ #
+ # This file is part of the *universe.hashicorp* project.
+ #
+ # *universe.hashicorp* is a free software project. You can redistribute it
+ # and/or modify it following the terms of the MIT License.
+ #
+ # This software project is distributed *as is*, WITHOUT WARRANTY OF ANY KIND;
+ # including but not limited to the WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ # PARTICULAR PURPOSE and NONINFRINGEMENT.
+ #
+ # You should have received a copy of the MIT License along with
+ # *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
+ #}
+region = "{{ nomad_service_region }}"
+datacenter = "{{ nomad_service_datacenter }}"
+data_dir = "{{ nomad_service_directory.state }}"
+disable_update_check = true
+
+{% if nomad_service_bind_address %}
+bind_addr = "{{ nomad_service_bind_address }}"
+{% endif %} {# nomad_service_bind_address #}
+
+consul {
+    address = "{{ nomad_service_consul_address }}"
+    ssl = {{ nomad_service_use_tls | lower }}
+
+    auto_advertise = true
+    checks_use_advertise = true
+
+    # Enabling the server and client to bootstrap using Consul.
+    client_auto_join = true
+    server_auto_join = true
+}
+
+ports {
+    {% for x in noamd_service_ports | dict2items(key_name='name', value_name='port') %}
+    # {{ x.port.description }}
+    {{ x.name }} = {{ x.port.port }}
+    {% endfor %} {# nomad_service_ports #}
+}
+
+{% if nomad_service_use_tls %}
+tls {
+    http = true
+    rpc = true
+
+    # In order to prevent unauthorized cluster access, Nomad requires all
+    # certificates be signed by the same Certificate Authority (CA).
+    ca_file = "{{ nomad_service_tls.ca_file }}"
+    cert_file = "{{ nomad_service_tls.cert_file }}"
+    key_file = "{{ nomad_service_tls.key_file }}"
+    tls_cipher_suites = "{% for x in nomad_service_tls_ciphers %}{{ x }}{{ loop.last | ternary('', ',') }}{% endfor %}"
+    tls_min_version = "tls12"
+    tls_prefer_server_cipher_suites = false
+}
+{% endif %} {# nomad_service_use_tls #}
