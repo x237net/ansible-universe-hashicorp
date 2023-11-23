@@ -1,0 +1,51 @@
+# roles/nomad_service/vars/main.yml
+# =================================
+#
+# Copying
+# -------
+#
+# Copyright (c) 2023 universe/staging authors and contributors.
+#
+# This file is part of the *universe/staging* project.
+#
+# *universe/staging* is a free software project. You can redistribute it and/or
+# modify it following the terms of the MIT License.
+#
+# This software project is distributed *as is*, WITHOUT WARRANTY OF ANY KIND;
+# including but not limited to the WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+# PARTICULAR PURPOSE and NONINFRINGEMENT.
+#
+# You should have received a copy of the MIT License along with
+# *universe/staging*. If not, see <http://opensource.org/licenses/MIT>.
+#
+nomad_service_package_name: "nomad"
+nomad_service_systemd_unit: "{{ nomad_service_package_name }}.service"
+
+nomad_service_directory:
+  config: "{{ dirs_prefix }}/etc/{{ nomad_service_package_name }}.d"
+  install: "{{ dirs_prefix }}/sbin"
+  state: "{{ dirs_localstatedir }}/{{ nomad_service_package_name }}"
+
+nomad_service_ports:
+  http:
+    description: "Provide UI and API access to Nomad agents."
+    port: "{{ nomad_service_http_port }}"
+    protocols: ["tcp"]
+
+  rpc:
+    description: "RPC protocol used by Nomad agents."
+    port: "{{ nomad_service_rpc_port }}"
+    protocols: ["tcp"]
+
+  serf:
+    description: "Gossip protocol to manage server membership using Serf."
+    port: "{{ nomad_service_serf_port }}"
+    protocols: ["tcp", "udp"]
+
+nomad_service_tls_ciphers:
+  - "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256"
+  - "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+  - "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384"
+  - "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+  - "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305"
+  - "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305"

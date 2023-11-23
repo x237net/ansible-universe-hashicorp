@@ -1,0 +1,51 @@
+{# roles/nomad_service/templates/nomad/docker.hcl.j2
+ # =================================================
+ #
+ # Copying
+ # -------
+ #
+ # Copyright (c) 2022 universe.hashicorp authors and contributors.
+ #
+ # This file is part of the *universe.hashicorp* project.
+ #
+ # *universe.hashicorp* is a free software project. You can redistribute it
+ # and/or modify it following the terms of the MIT License.
+ #
+ # This software project is distributed *as is*, WITHOUT WARRANTY OF ANY KIND;
+ # including but not limited to the WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ # PARTICULAR PURPOSE and NONINFRINGEMENT.
+ #
+ # You should have received a copy of the MIT License along with
+ # *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
+ #}
+plugin "docker" {
+    config {
+        allow_privileged = false
+
+        allow_caps = [
+            "AUDIT_WRITE",
+            "CHOWN",
+            "DAC_OVERRIDE",
+            "FOWNER",
+            "FSETID",
+            "IPC_LOCK",
+            "KILL",
+            "MKNOD",
+            "NET_BIND_SERVICE",
+            "NET_RAW",
+            "SETFCAP",
+            "SETGID",
+            "SETPCAP",
+            "SETUID",
+            "SYS_CHROOT",
+        ]
+
+        allow_runtimes = [
+            "runc",
+        ]
+
+        volumes {
+            enabled = true
+        }
+    }
+}
