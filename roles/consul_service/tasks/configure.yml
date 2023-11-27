@@ -21,8 +21,8 @@
 - name: "Update Hashicorp Consul configuration"
   ansible.builtin.template:
     src: "consul/config.hcl.j2"
-    dest: "{{ consul_service_directory.config }}/00-{{ consul_service_package_name }}.hcl"
-    owner: "{{ consul_service_system_username }}"
-    group: "{{ consul_service_system_groupname }}"
+    dest: "{{ consul_vars_directory.config }}/00-{{ consul_vars_package_name }}.hcl"
+    owner: "{{ consul_vars_system_username }}"
+    group: "{{ consul_vars_system_groupname }}"
     mode: "0640"
   notify: "service-reload"

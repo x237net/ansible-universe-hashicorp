@@ -1,5 +1,5 @@
-# roles/consul_install/vars/main.yml
-# ==================================
+# roles/consul_vars/defaults/main.yml
+# ===================================
 #
 # Copying
 # -------
@@ -18,9 +18,12 @@
 # You should have received a copy of the MIT License along with
 # *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
 #
-consul_install_package_name: "consul"
+consul_vars_system_username: "{{ consul_vars_package_name }}"
+consul_vars_system_groupname: "{{ consul_vars_system_username }}"
 
-consul_install_directory:
-  config: "{{ dirs_prefix }}/etc/{{ consul_install_package_name }}.d"
-  install: "{{ dirs_prefix }}/sbin"
-  state: "{{ dirs_localstatedir }}/{{ consul_install_package_name }}"
+consul_vars_dns_port: 8600
+consul_vars_http_port: 8500
+consul_vars_https_port: 8501
+consul_vars_serf_lan_port: 8301
+consul_vars_serf_wan_port: 8302
+consul_vars_server_port: 8300

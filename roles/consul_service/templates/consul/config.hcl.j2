@@ -28,7 +28,7 @@ addresses {
 }
 {% endif %} {# consul_service_addresses #}
 
-data_dir = "{{ consul_service_directory.state }}"
+data_dir = "{{ consul_vars_directory.state }}"
 datacenter = "{{ consul_service_datacenter }}"
 primary_datacenter = "{{ consul_service_primary_datacenter }}"
 server = true
@@ -45,19 +45,17 @@ bootstrap_expect = 1
 {% endif %} {# consul_service_servers #}
 
 ports {
-    {% for x in consul_service_port | dict2items(key_name='name', value_name='info') %}
-    {% set description = x.info.description %}
-    {% set protocol = x.name | replace('consul_', '') %}
-    {% set port = x.info.ports.0.port %}
-    {% if consul_service_use_tls and protocol == "http" %}
+    {% for x in consul_vars_port | dict2items(key_name='name', value_name='port') %}
+    {% set port = x.port.port %}
+    {% if consul_service_use_tls and x.name == "http" %}
         {% set port = -1 %}
-    {% endif %} {# consul_service_use_tls and protocol == "http" #}
-    {% if not consul_service_use_tls and protocol == "https" %}
+    {% endif %} {# consul_service_use_tls and x.name == "http" #}
+    {% if not consul_service_use_tls and x.name == "https" %}
         {% set port = -1 %}
-    {% endif %} {# consul_service_use_tls and protocol == "https" #}
-    # {{ description }}
-    {{ protocol }} = {{ port }}
-    {% endfor %} {# consul_service_port #}
+    {% endif %} {# consul_service_use_tls and x.name == "https" #}
+    # {{ x.port.description }}
+    {{ x.name }} = {{ x.port.port }}
+    {% endfor %} {# consul_vars_port #}
 }
 
 ui_config {
@@ -76,7 +74,7 @@ tls {
 
         cert_file = "{{ consul_service_tls.cert_file }}"
         key_file = "{{ consul_service_tls.key_file }}"
-        tls_cipher_suites = "{% for x in consul._tls_ciphers %}{{ x }}{{ loop.last | ternary('', ',') }}{% endfor %}"
+        tls_cipher_suites = "{% for x in consul_vars_tls_ciphers %}{{ x }}{{ loop.last | ternary('', ',') }}{% endfor %}"
         tls_min_version = "TLSv1_2"
 
         {% if consul_service_tls.ca_file is defined or consul_service_tls.ca_path is defined %}

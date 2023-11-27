@@ -18,9 +18,6 @@
 # You should have received a copy of the MIT License along with
 # *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
 #
-consul_service_system_username: "{{ consul_service_package_name }}"
-consul_service_system_groupname: "{{ consul_service_system_username }}"
-
 consul_service_bind_address: "127.0.0.1"
 consul_service_cluster_bind_address: "{{ ansible_facts.default_ipv4.address }}"
 
@@ -30,14 +27,6 @@ consul_service_servers: []
 consul_service_datacenter: "dc1"
 consul_service_primary_datacenter: "{{ consul_service_datacenter }}"
 
-consul_service_dns_port: 8600
-consul_service_http_port: 8500
-consul_service_https_port: 8501
-consul_service_serf_lan_port: 8301
-consul_service_serf_wan_port: 8302
-consul_service_server_port: 8300
-
 consul_service_start: true
 consul_service_ui_enabled: true
-
 consul_service_use_tls: false

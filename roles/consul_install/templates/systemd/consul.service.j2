@@ -25,18 +25,18 @@ After=network-online.target
 Wants=network-online.target
 
 [Service]
-Environment="DAEMON_ARGS=-config-dir={{ consul_install_directory.config }} -data-dir={{ consul_install_directory.state }}"
+Environment="DAEMON_ARGS=-config-dir={{ consul_vars_directory.config }} -data-dir={{ consul_vars_directory.state }}"
 EnvironmentFile=-{{ dirs_prefix }}/etc/default/%p
 
-User={{ consul_install_system_username }}
-Group={{ consul_install_system_groupname }}
+User={{ consul_vars_system_username }}
+Group={{ consul_vars_system_groupname }}
 
 ExecReload=/bin/kill -HUP $MAINPID
-ExecStart={{ consul_install_directory.install }}/consul agent $DAEMON_ARGS
+ExecStart={{ consul_vars_directory.install }}/consul agent $DAEMON_ARGS
 KillSignal=SIGINT
 Restart=on-failure
 
-{% if consul_install_dns_port | default(0) == 53 %}
+{% if consul_vars_port.dns.port | default(0) == 53 %}
 AmbientCapabilities=CAP_NET_BIND_SERVICE
 CapabilityBoundingSet=CAP_NET_BIND_SERVICE
 SecureBits=keep-caps

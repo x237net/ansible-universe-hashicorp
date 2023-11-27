@@ -1,5 +1,5 @@
-# roles/consul_service/vars/main.yml
-# ==================================
+# roles/consul_vars/vars/main.yml
+# ===============================
 #
 # Copying
 # -------
@@ -18,58 +18,46 @@
 # You should have received a copy of the MIT License along with
 # *universe/staging*. If not, see <http://opensource.org/licenses/MIT>.
 #
-consul_service_package_name: "consul"
-consul_service_systemd_unit: "{{ consul_service_package_name }}.service"
+consul_vars_package_name: "consul"
+consul_vars_systemd_unit: "{{ consul_vars_package_name }}.service"
 
-consul_service_directory:
-  config: "{{ dirs_prefix }}/etc/{{ consul_service_package_name }}.d"
+consul_vars_directory:
+  config: "{{ dirs_prefix }}/etc/{{ consul_vars_package_name }}.d"
   install: "{{ dirs_prefix }}/sbin"
-  state: "{{ dirs_localstatedir }}/{{ consul_service_package_name }}"
+  state: "{{ dirs_localstatedir }}/{{ consul_vars_package_name }}"
 
-consul_service_port:
-  consul_dns:
+consul_vars_port:
+  dns:
     description: "Used to resolve DNS queries."
-    ports:
-      - port: "{{ consul_service_dns_port }}"
-        protocol: "tcp"
-      - port: "{{ consul_service_dns_port }}"
-        protocol: "udp"
+    port: "{{ consul_vars_dns_port }}"
+    protocols: ["tcp", "udp"]
 
-  consul_http:
+  http:
     description: "This is used by clients to talk to the HTTP API."
-    ports:
-      - port: "{{ consul_service_http_port }}"
-        protocol: "tcp"
+    port: "{{ consul_vars_http_port }}"
+    protocols: ["tcp"]
 
-  consul_https:
+  https:
     description: "This is used by clients to talk to the API over HTTPS."
-    ports:
-      - port: "{{ consul_service_https_port }}"
-        protocol: "tcp"
+    port: "{{ consul_vars_https_port }}"
+    protocols: ["tcp"]
 
-  consul_serf_lan:
+  serf_lan:
     description: "This is used to handle gossip in the LAN."
-    ports:
-      - port: "{{ consul_service_serf_lan_port }}"
-        protocol: "tcp"
-      - port: "{{ consul_service_serf_lan_port }}"
-        protocol: "udp"
+    port: "{{ consul_vars_serf_lan_port }}"
+    protocol: ["tcp", "udp"]
 
-  consul_serf_wan:
+  serf_wan:
     description: "This is used by servers to gossip over the WAN, to other servers."
-    ports:
-      - port: "{{ consul_service_serf_wan_port }}"
-        protocol: "tcp"
-      - port: "{{ consul_service_serf_wan_port }}"
-        protocol: "udp"
+    port: "{{ consul_vars_serf_wan_port }}"
+    protocols: ["tcp", "udp"]
 
-  consul_server:
+  server:
     description: "This is used by servers to handle incoming requests from other agents."
-    ports:
-      - port: "{{ consul_service_server_port }}"
-        protocol: "tcp"
+    port: "{{ consul_vars_server_port }}"
+    protocols: ["tcp"]
 
-consul_service_tls_ciphers:
+consul_vars_tls_ciphers:
   - "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256"
   - "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
   - "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384"

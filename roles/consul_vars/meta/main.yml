@@ -1,5 +1,5 @@
-# roles/consul_install/defaults/main.yml
-# ======================================
+# roles/consul_vars/meta/main.yml
+# ===============================
 #
 # Copying
 # -------
@@ -18,5 +18,5 @@
 # You should have received a copy of the MIT License along with
 # *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
 #
-consul_install_system_username: "{{ consul_install_package_name }}"
-consul_install_system_groupname: "{{ consul_install_system_username }}"
+dependencies:
+  - role: "universe.unix.dirs"
