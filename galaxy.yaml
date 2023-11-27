@@ -34,6 +34,7 @@ tags:
   - "nomad"
   - "vault"
 dependencies:
+  "community.general": ">=1.6.0"
   "universe.unix": ">=0.1.0"
 repository: "https://github.com/x237net/ansible-universe-hashicorp"
 issues: "https://github.com/x237net/ansible-universe-hashicorp/issues"
