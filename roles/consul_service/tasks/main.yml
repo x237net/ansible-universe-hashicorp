@@ -23,6 +23,6 @@
 
 - name: "Start the Hashicorp Consul service"
   ansible.builtin.debug:
-    msg: "Start service: {{ consul_service_systemd_unit }}"
+    msg: "Start service: {{ consul_vars_systemd_unit }}"
   notify: "service-start"
   changed_when: true

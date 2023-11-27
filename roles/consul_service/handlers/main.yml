@@ -20,12 +20,12 @@
 #
 - name: "service-reload"
   ansible.builtin.service:
-    name: "{{ consul_service_systemd_unit }}"
+    name: "{{ consul_vars_systemd_unit }}"
     state: "reloaded"
 
 - name: "service-start"
   ansible.builtin.service:
-    name: "{{ consul_service_systemd_unit }}"
+    name: "{{ consul_vars_systemd_unit }}"
     state: "started"
     enabled: true
   when: "consul_service_start"

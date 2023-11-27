@@ -29,6 +29,14 @@ The `universe.hashicorp.consul_service` configures [Hashicorp
 Consul](https://www.consul.io/), a service mesh solution providing a full
 control plane with service discovery.
 
+Dependencies
+------------
+
+This role depends on the following roles:
+
+`universe.hashicorp.consul_vars`
+: For common Hashicorp Consul configuration variables.
+
 Variables
 ---------
 

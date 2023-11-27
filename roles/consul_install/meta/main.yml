@@ -19,11 +19,10 @@
 # *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
 #
 dependencies:
-  - role: "universe.unix.dirs"
-
+  - role: "universe.hashicorp.consul_vars"
   - role: "universe.hashicorp.install"
     vars:
-      install_system_username: "{{ consul_install_system_username }}"
-      install_system_groupname: "{{ consul_install_system_groupname }}"
+      install_system_username: "{{ consul_vars_system_username }}"
+      install_system_groupname: "{{ consul_vars_system_groupname }}"
       install_package_service_content: >-
         {{ lookup('ansible.builtin.template', 'systemd/consul.service.j2') }}

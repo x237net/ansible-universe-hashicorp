@@ -34,23 +34,8 @@ This role depends on the following roles:
 `universe.unix.dirs`
 : To get installation directories of the system.
 
-`universe.hashicorp.consul_install`
+`universe.hashicorp.install`
 : To install required the Hashicorp provided package on the system.
 
-Variables
----------
-
-The role exposes the following variables for its configuration:
-
-### Optional
-
-`consul_install_dns_port` (Default: `0`)
-: The DNS port on which Consul is meant to listen to. When set to `53`, the
-standard port for DNS, the Consul service is given the `CAP_NET_BIND_SERVICE` in
-order to run as a non-root user.
-
-`consul_install_system_username` (Default: `"consul"`)
-: A user name which will own the binary and installed directories.
-
-`consul_install_system_groupname` (Default: `"{{ consul_install_system_username }}"`)
-: A group name which will own the binary and installed directories.
+`universe.hashicorp.consul_vars`
+: For common Hashicorp Consul configuration variables.

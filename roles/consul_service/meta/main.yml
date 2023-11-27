@@ -19,4 +19,4 @@
 # *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
 #
 dependencies:
-  - role: "universe.unix.dirs"
+  - role: "universe.hashicorp.consul_vars"

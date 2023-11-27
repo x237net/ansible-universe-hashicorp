@@ -23,6 +23,6 @@
 
 - name: "Start Hashicorp Nomad service"
   ansible.builtin.debug:
-    msg: "Start service: {{ nomad_service_systemd_unit }}"
+    msg: "Start service: {{ nomad_vars_systemd_unit }}"
   notify: "service-start"
   changed_when: true
