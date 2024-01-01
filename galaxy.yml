@@ -39,6 +39,10 @@ dependencies:
 repository: "https://github.com/x237net/ansible-universe-hashicorp"
 issues: "https://github.com/x237net/ansible-universe-hashicorp/issues"
 build_ignore:
-  - ".editorconfig"
-  - ".gitignore"
-  - ".pre-commit-config.yaml"
+  - ".*"
+  - "*.lock"
+  - "**/.*"
+  - "**/*.lock"
+  - "changelogs/fragments"
+  - "changelogs/fragments/*/**"
+  - "pyproject.toml"
