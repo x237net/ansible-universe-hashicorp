@@ -21,12 +21,10 @@
 namespace: "universe"
 name: "hashicorp"
 description: "A set of Ansible roles to manage a Hashicorp stack."
-version: "0.1.0-alpha.1"
+version: "0.1.0"
 readme: "README.md"
 authors:
   - "See AUTHORS.rst"
-license:
-  - "MIT"
 license_file: "LICENSE.rst"
 tags:
   - "consul"
@@ -39,6 +37,10 @@ dependencies:
 repository: "https://github.com/x237net/ansible-universe-hashicorp"
 issues: "https://github.com/x237net/ansible-universe-hashicorp/issues"
 build_ignore:
-  - ".editorconfig"
-  - ".gitignore"
-  - ".pre-commit-config.yaml"
+  - ".*"
+  - "*.lock"
+  - "**/.*"
+  - "**/*.lock"
+  - "changelogs/fragments"
+  - "changelogs/fragments/*/**"
+  - "pyproject.toml"
