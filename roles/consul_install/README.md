@@ -26,6 +26,12 @@ The `universe.hashicorp.consul_install` role will fetch and install [Hashicorp
 Consul](https://www.consul.io/), a service mesh solution providing a full
 control plane with service discovery.
 
+Configuration
+-------------
+
+Use the `universe.hashicorp.consul_vars` role to configure the different aspects
+of this role.
+
 Dependencies
 ------------
 

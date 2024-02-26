@@ -23,5 +23,9 @@ dependencies:
   - role: "universe.hashicorp.nomad_vars"
   - role: "universe.hashicorp.install"
     vars:
+      install_bindir: "{{ nomad_vars_directory.install }}"
+      install_confdir: "{{ nomad_vars_directory.config }}"
+      install_statedir: "{{ nomad_vars_directory.state }}"
+      install_package_name: "{{ nomad_vars_package_name }}"
       install_package_service_content: >-
         {{ lookup('ansible.builtin.template', 'systemd/nomad.service.j2') }}

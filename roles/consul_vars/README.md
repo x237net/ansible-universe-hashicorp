@@ -60,6 +60,9 @@ The role accepts the following configuration variables:
 `consul_vars_server_port` (Default: `8300`)
 : This is used by the server to handle incoming requests from other servers.
 
+`consul_vars_statedir` (Default: `{{ dirs_localstatedir }}/{{ consul_vars_package_name }}`)
+: Directory where the Consul process keeps it runtime files.
+
 `consul_vars_system_username` (Default: `"consul"`)
 : A user name which will own the binary and installed directories.
 

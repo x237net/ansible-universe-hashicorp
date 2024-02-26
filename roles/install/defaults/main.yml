@@ -25,3 +25,7 @@ install_package_version: "{{ install_package_check.current_version }}"
 
 install_system_username: "root"
 install_system_groupname: "{{ install_system_username }}"
+
+install_bindir: "{{ dirs_bindir }}"
+install_confdir: "{{ dirs_sysconfdir }}/{{ install_package_name }}.d"
+install_statedir: "{{ dirs_localstatedir }}/{{ install_package_name }}"

@@ -26,6 +26,12 @@ The `universe.hashicorp.nomad_install` role installs [Hashicorp Nomad](
 https://www.nomadproject.io/), a flexible scheduler and orchestrator to
 deploy and manage containers and non-containerized applications.
 
+Configuration
+-------------
+
+Use the `universe.hashicorp.nomad_vars` role to configure the different aspects
+of this role.
+
 Dependencies
 ------------
 
