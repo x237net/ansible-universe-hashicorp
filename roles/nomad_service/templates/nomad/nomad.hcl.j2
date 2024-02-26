@@ -27,6 +27,7 @@ disable_update_check = true
 bind_addr = "{{ nomad_service_bind_address }}"
 {% endif %} {# nomad_service_bind_address #}
 
+{% if nomad_service_use_consul %}
 consul {
     address = "{{ nomad_service_consul_address }}"
     ssl = {{ nomad_service_use_tls | lower }}
@@ -38,6 +39,7 @@ consul {
     client_auto_join = true
     server_auto_join = true
 }
+{% endif %} {# nomad_service_use_consul #}
 
 ports {
     {% for x in noamd_vars_port | dict2items(key_name='name', value_name='port') %}

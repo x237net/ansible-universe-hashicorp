@@ -29,6 +29,7 @@ nomad_service_consul_address: "127.0.0.1:8500"
 nomad_service_start: true
 nomad_service_is_client: false
 nomad_service_is_server: false
+nomad_service_use_consul: false
 nomad_service_use_tls: false
 
 nomad_service_drivers: []

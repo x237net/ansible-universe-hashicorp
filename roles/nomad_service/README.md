@@ -43,6 +43,10 @@ The role exposes the following variables for its configuration:
 
 ### Required
 
+`nomad_service_consul_address`
+: Required when `nomad_use_consul` is set to `true`. The address to the local
+Consul agent, given in the format `host:port`.
+
 `nomad_service_tls`
 : Required when `nomad_use_tls` is set to `true`. A dictionary with the
 following keys:
@@ -84,6 +88,9 @@ in scheduling decisions.
 
 `nomad_service_service_start` (Default: `true`)
 : Should the Hashicorp Nomad service be started?
+
+`nomad_service_use_consul` (Default: `false`)
+Whether or not [Hashicorp Consul](https://www.consul.io/) is used by Nomad.
 
 `nomad_service_use_tls` (Default: `false`)
 : Enforces secure TLS for Hashicorp Nomad's HTTP and RPC communication.
