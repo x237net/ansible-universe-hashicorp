@@ -26,7 +26,7 @@ install_package_check_url: "https://checkpoint-api.hashicorp.com/v1/check/{{ ins
 
 install_package_check: "{{ lookup('ansible.builtin.url', install_package_check_url) | from_json }}"
 
-install_package_template_url: "{{ install_package_base_url }}/{{ install_package_version }}/{{ package_name }}_{{ install_package_version }}"
+install_package_template_url: "{{ install_package_base_url }}/{{ install_package_version }}/{{ install_package_name }}_{{ install_package_version }}"
 install_package_url: "{{ install_package_template_url }}_{{ ansible_facts.system | lower }}_{{ install_package_arch_map[ansible_facts.architecture] }}.zip"
 install_package_sum_url: "{{ install_package_template_url }}_SHA256SUMS"
 install_package_sig_url: "{{ install_package_sum_url }}.sig"

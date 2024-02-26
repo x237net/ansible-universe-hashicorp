@@ -54,7 +54,7 @@ ports {
         {% set port = -1 %}
     {% endif %} {# consul_service_use_tls and x.name == "https" #}
     # {{ x.port.description }}
-    {{ x.name }} = {{ x.port.port }}
+    {{ x.name }} = {{ port }}
     {% endfor %} {# consul_vars_port #}
 }
 

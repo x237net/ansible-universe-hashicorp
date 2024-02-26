@@ -24,9 +24,9 @@
   listen: "service-installed"
 
 - name: "Service restart"
-  when: >-
-    system_package.service.status is defined
-    and system_package.service.status.ActiveState == "active"
+  when:
+    - system_package.service.status is defined
+    - system_package.service.status.ActiveState == "active"
   ansible.builtin.service:
     name: "{{ system_package.service.name }}"
     state: "restarted"
@@ -37,4 +37,4 @@
   ansible.builtin.file:
     path: "{{ _package_workdir.path }}"
     state: "absent"
-  listen: "service-installed"
+  listen: "workdir-cleanup"

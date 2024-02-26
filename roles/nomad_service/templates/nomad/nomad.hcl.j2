@@ -42,7 +42,7 @@ consul {
 {% endif %} {# nomad_service_use_consul #}
 
 ports {
-    {% for x in noamd_vars_port | dict2items(key_name='name', value_name='port') %}
+    {% for x in nomad_vars_port | dict2items(key_name='name', value_name='port') %}
     # {{ x.port.description }}
     {{ x.name }} = {{ x.port.port }}
     {% endfor %} {# nomad_vars_port #}
