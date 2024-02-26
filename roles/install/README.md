@@ -58,6 +58,12 @@ Hashicorp.
 
 ### Optional
 
+`install_bindir` (Default: `{{ dirs_bindir }}`)
+: Directory where to install the package's binary.
+
+`install_confdir` (Default: `{{ dirs_sysconfdir }}/{{ install_package_name }}.d`)
+: Directory where to install the package's configuration files.
+
 `install_force` (Default: `false`)
 : When `true`, the package will be reinstalled even if the requested version is
 running on the system.
@@ -70,6 +76,9 @@ content of a systemd service unit file.
 : The version of the package to be installed. When not provided, the role will
 attempt to fetch the latest version available providing it is published on
 [Hashicorp Checkpoint](https://checkpoint.hashicorp.com/).
+
+`install_statedir` (Default: `{{ dirs_localstatedir }}/{{ install_package_name }}`)
+: Directory where the process keeps it runtime files.
 
 `install_system_username` (Default: `"root"`)
 : A user name which will own the binary and installed directories.

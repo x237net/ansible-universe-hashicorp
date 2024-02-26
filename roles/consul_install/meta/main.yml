@@ -24,5 +24,9 @@ dependencies:
     vars:
       install_system_username: "{{ consul_vars_system_username }}"
       install_system_groupname: "{{ consul_vars_system_groupname }}"
+      install_bindir: "{{ consul_vars_directory.install }}"
+      install_confdir: "{{ consul_vars_directory.config }}"
+      install_statedir: "{{ consul_vars_directory.state }}"
+      install_package_name: "{{ consul_vars_package_name }}"
       install_package_service_content: >-
         {{ lookup('ansible.builtin.template', 'systemd/consul.service.j2') }}

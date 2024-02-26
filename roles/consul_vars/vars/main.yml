@@ -22,9 +22,9 @@ consul_vars_package_name: "consul"
 consul_vars_systemd_unit: "{{ consul_vars_package_name }}.service"
 
 consul_vars_directory:
-  config: "{{ dirs_prefix }}/etc/{{ consul_vars_package_name }}.d"
-  install: "{{ dirs_prefix }}/sbin"
-  state: "{{ dirs_localstatedir }}/{{ consul_vars_package_name }}"
+  config: "{{ dirs_sysconfdir }}/{{ consul_vars_package_name }}.d"
+  install: "{{ dirs_bindir }}"
+  state: "{{ consul_vars_statedir }}"
 
 consul_vars_port:
   dns:

@@ -32,6 +32,6 @@ install_package_sum_url: "{{ install_package_template_url }}_SHA256SUMS"
 install_package_sig_url: "{{ install_package_sum_url }}.sig"
 
 install_package_directory:
-  config: "{{ dirs_sysconfdir }}/{{ package_name }}.d"
-  install: "{{ dirs_bindir }}"
-  state: "{{ dirs_localstatedir }}/{{ package_name }}"
+  config: "{{ install_confdir }}"
+  install: "{{ install_bindir }}"
+  state: "{{ install_statedir }}"
