@@ -44,8 +44,9 @@ SecureBits=keep-caps
 NoNewPrivileges=true
 PrivateDevices=true
 PrivateTmp=yes
-ProtectHome=read-only
+ProtectHome=true
 ProtectKernelTunables=true
+# Note: The following turns the /etc and /usr folders read-only.
 ProtectSystem=full
 
 [Install]
