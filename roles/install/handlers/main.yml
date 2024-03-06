@@ -25,8 +25,8 @@
 
 - name: "Service restart"
   when:
-    - system_package.service.status is defined
-    - system_package.service.status.ActiveState == "active"
+    - "system_package.service.status is defined"
+    - "system_package.service.status.ActiveState == 'active'"
   ansible.builtin.service:
     name: "{{ system_package.service.name }}"
     state: "restarted"
