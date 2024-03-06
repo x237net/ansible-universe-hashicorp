@@ -25,6 +25,9 @@ universe.hashicorp Release Notes
 .. contents:: Topics
 
 
+v0.2.1
+======
+
 v0.2.0
 ======
 
