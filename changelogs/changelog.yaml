@@ -51,3 +51,5 @@ releases:
           nomad_vars - Added the ``nomad_vars_statedir`` variable to
           configure runtime files location for Hashicorp Nomad.
     release_date: "2024-03-06"
+  0.2.1:
+    release_date: "2024-03-06"

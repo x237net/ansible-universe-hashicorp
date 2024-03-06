@@ -21,7 +21,7 @@
 namespace: "universe"
 name: "hashicorp"
 description: "A set of Ansible roles to manage a Hashicorp stack."
-version: "0.1.0"
+version: "0.2.1"
 readme: "README.md"
 authors:
   - "See AUTHORS.rst"
