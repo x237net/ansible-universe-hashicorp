@@ -25,6 +25,35 @@ universe.hashicorp Release Notes
 .. contents:: Topics
 
 
+v0.2.0
+======
+
+Release Summary
+---------------
+
+Fixup of a few issues.
+
+Major Changes
+-------------
+
+- consul_install - systemd service has been changed to run Hashicorp Consul with
+  protected ``/home`` and read-only system folders.
+- nomad_service - Removed dependency on ``consul_install``. Users must now
+  manually install Hashicorp Consul and set the variable
+  ``nomad_service_use_consul`` to ``true``.
+
+Minor Changes
+-------------
+
+- consul_vars - Added the ``consul_vars_statedir`` variable to configure runtime
+  files location for Hashicorp Consul.
+- install - Now accept ``install_bindir``, ``install_confdir``, and
+  ``install_statedir`` variables to specify respectively installation
+  directories for binaries, configuration and runtime files of the Hashicorp
+  package.
+- nomad_vars - Added the ``nomad_vars_statedir`` variable to configure runtime
+  files location for Hashicorp Nomad.
+
 v0.1.0
 ======
 
