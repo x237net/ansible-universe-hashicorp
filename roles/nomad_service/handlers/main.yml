@@ -18,14 +18,16 @@
 # You should have received a copy of the MIT License along with
 # *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
 #
-- name: "service-reload"
+- name: "Service Reload"
   ansible.builtin.service:
     name: "{{ nomad_vars_systemd_unit }}"
     state: "reloaded"
+  listen: "service-reload"
 
-- name: "service-start"
+- name: "Service Start"
   ansible.builtin.service:
     name: "{{ nomad_vars_systemd_unit }}"
     state: "started"
     enabled: true
+  listen: "service-start"
   when: "nomad_service_start"
