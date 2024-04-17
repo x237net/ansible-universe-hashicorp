@@ -1,5 +1,5 @@
-# roles/nomad_vars/defaults/main.yml
-# ==================================
+# changelogs/fragments/nomad_install-split-client-server.yml
+# ==========================================================
 #
 # Copying
 # -------
@@ -18,11 +18,8 @@
 # You should have received a copy of the MIT License along with
 # *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
 #
-nomad_vars_system_username: "{{ nomad_vars_package_name }}"
-nomad_vars_system_groupname: "{{ nomad_vars_system_username }}"
-
-nomad_vars_statedir: "{{ dirs_localstatedir }}/{{ nomad_vars_package_name }}"
-
-nomad_vars_port_http: 4646
-nomad_vars_port_rpc: 4647
-nomad_vars_port_serf: 4648
+major_changes:
+  - |-
+    nomad_install - The Nomad service is now divided between client and server.
+    The ``nomad.service`` unit starts a Nomad server while the
+    ``nomad-client.service`` unit starts a Nomad client.

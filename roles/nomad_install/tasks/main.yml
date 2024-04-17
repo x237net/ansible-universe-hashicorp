@@ -1,0 +1,45 @@
+# roles/nomad_install/tasks/main.yml
+# ==================================
+#
+# Copying
+# -------
+#
+# Copyright (c) 2022 universe.hashicorp authors and contributors.
+#
+# This file is part of the *universe.hashicorp* project.
+#
+# *universe.hashicorp* is a free software project. You can redistribute it
+# and/or modify it following the terms of the MIT License.
+#
+# This software project is distributed *as is*, WITHOUT WARRANTY OF ANY KIND;
+# including but not limited to the WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+# PARTICULAR PURPOSE and NONINFRINGEMENT.
+#
+# You should have received a copy of the MIT License along with
+# *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
+#
+- name: "Setup Hashicorp Nomad client service"
+  block:
+    - name: "Ensure systemd service directory"
+      ansible.builtin.file:
+        path: "{{ dirs_prefix }}/lib/systemd/system"
+        state: "directory"
+        group: "root"
+        owner: "root"
+        mode: "0755"
+        setype: "systemd_unit_file_t"
+
+    - name: "Install system unit file"
+      ansible.builtin.copy:
+        content: "{{ lookup('ansible.builtin.template', 'systemd/nomad-client.service.j2') }}"
+        dest: "{{ dirs_prefix }}/lib/systemd/system/{{ nomad_vars_package_name }}-client.service"
+        group: "root"
+        owner: "root"
+        mode: "0644"
+        setype: "systemd_unit_file_t"
+  always:
+    - name: "Refresh systemd"
+      ansible.builtin.debug:
+        msg: "Refresh systemd"
+      notify: "service-installed"
+      changed_when: true

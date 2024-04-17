@@ -20,9 +20,10 @@
 #
 nomad_vars_package_name: "nomad"
 nomad_vars_systemd_unit: "{{ nomad_vars_package_name }}.service"
+nomad_vars_systemd_client_unit: "{{ nomad_vars_package_name }}-client.service"
 
 nomad_vars_directory:
-  config: "{{ dirs_sysconfdir }}/{{ nomad_vars_package_name }}.d"
+  config: "{{ dirs_sysconfdir }}/{{ nomad_vars_package_name }}"
   install: "{{ dirs_bindir }}"
   state: "{{ nomad_vars_statedir }}"
 

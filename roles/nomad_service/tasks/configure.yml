@@ -18,10 +18,19 @@
 # You should have received a copy of the MIT License along with
 # *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
 #
+- name: "Create Hashicorp Nomad configuration directory"
+  ansible.builtin.file:
+    path: "{{ nomad_service_directory_config }}"
+    state: "directory"
+    group: "{{ nomad_vars_system_groupname }}"
+    owner: "{{ nomad_vars_system_username }}"
+    mode: "0750"
+    setype: "etc_t"
+
 - name: "Install Hashicorp Nomad global configuration"
   ansible.builtin.template:
     src: "nomad/nomad.hcl.j2"
-    dest: "{{ nomad_vars_directory.config }}/00-nomad.hcl"
+    dest: "{{ nomad_service_directory_config }}/00-nomad.hcl"
     group: "{{ nomad_vars_system_groupname }}"
     owner: "{{ nomad_vars_system_username }}"
     mode: "0640"
@@ -30,7 +39,7 @@
 - name: "Install Hashicorp Nomad server configuration"
   ansible.builtin.template:
     src: "nomad/server.hcl.j2"
-    dest: "{{ nomad_vars_directory.config }}/10-server.hcl"
+    dest: "{{ nomad_service_directory_config }}/10-server.hcl"
     group: "{{ nomad_vars_system_groupname }}"
     owner: "{{ nomad_vars_system_username }}"
     mode: "0640"
@@ -40,7 +49,7 @@
 - name: "Install Hashicorp Nomad client configuration"
   ansible.builtin.template:
     src: "nomad/client.hcl.j2"
-    dest: "{{ nomad_vars_directory.config }}/20-client.hcl"
+    dest: "{{ nomad_service_directory_config }}/10-client.hcl"
     group: "{{ nomad_vars_system_groupname }}"
     owner: "{{ nomad_vars_system_username }}"
     mode: "0640"
@@ -50,7 +59,7 @@
 - name: "Install Hashicorp Nomad driver configuration"
   ansible.builtin.template:
     src: "nomad/{{ item }}.hcl.j2"
-    dest: "{{ nomad_vars_directory.config }}/50-{{ item }}.hcl"
+    dest: "{{ nomad_service_directory_config }}/50-{{ item }}.hcl"
     group: "{{ nomad_vars_system_groupname }}"
     owner: "{{ nomad_vars_system_username }}"
     mode: "0640"

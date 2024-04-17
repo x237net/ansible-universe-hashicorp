@@ -1,4 +1,4 @@
-# roles/nomad_install/meta/main.yml
+# roles/nomad_service/vars/main.yml
 # =================================
 #
 # Copying
@@ -18,15 +18,5 @@
 # You should have received a copy of the MIT License along with
 # *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
 #
-dependencies:
-  - role: "universe.hashicorp.nomad_vars"
-  - role: "universe.hashicorp.install"
-    vars:
-      install_system_username: "{{ nomad_vars_system_username }}"
-      install_system_groupname: "{{ nomad_vars_system_groupname }}"
-      install_bindir: "{{ nomad_vars_directory.install }}"
-      install_confdir: "{{ nomad_vars_directory.config }}"
-      install_statedir: "{{ nomad_vars_directory.state }}"
-      install_package_name: "{{ nomad_vars_package_name }}"
-      install_package_service_content: >-
-        {{ lookup('ansible.builtin.template', 'systemd/nomad.service.j2') }}
+nomad_service_directory_config: >-
+  {{ nomad_vars_directory.config }}/{{ nomad_service_is_client | ternary('client.d', 'server.d') }}
