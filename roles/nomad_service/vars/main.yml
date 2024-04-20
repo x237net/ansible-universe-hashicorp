@@ -18,5 +18,10 @@
 # You should have received a copy of the MIT License along with
 # *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
 #
+nomad_service_is_client_mode: >-
+  {{ nomad_service_is_user_client | default(nomad_service_is_client, true) }}
+
 nomad_service_directory_config: >-
-  {{ nomad_vars_directory.config }}/{{ nomad_service_is_client | ternary('client.d', 'server.d') }}
+  {{ nomad_vars_directory.config }}/{{ nomad_service_is_client_mode | ternary('client.d', 'server.d') }}
+nomad_service_api_address: >-
+  {{ nomad_service_use_tls | ternary('https', 'http') }}://{{ nomad_bind_address | default('127.0.0.1') }}:{{ nomad_vars_port_http }}

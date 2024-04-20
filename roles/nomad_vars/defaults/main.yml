@@ -21,6 +21,7 @@
 nomad_vars_system_username: "{{ nomad_vars_package_name }}"
 nomad_vars_system_groupname: "{{ nomad_vars_system_username }}"
 
+nomad_vars_confdir: "{{ dirs_sysconfdir }}/{{ nomad_vars_package_name }}"
 nomad_vars_statedir: "{{ dirs_localstatedir }}/{{ nomad_vars_package_name }}"
 
 nomad_vars_port_http: 4646

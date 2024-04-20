@@ -25,6 +25,15 @@
   listen: "service-reload"
   when: "nomad_service_is_client"
 
+- name: "Reload Hashicorp Nomad Client for user {{ nomad_vars_system_username }}"
+  ansible.builtin.service:
+    name: "{{ nomad_vars_systemd_user_client_unit | format(nomad_vars_system_username) }}"
+    state: "reloaded"
+  listen: "service-reload"
+  when:
+    - "nomad_service_is_user_client"
+    - "nomad_vars_system_username != 'root'"
+
 - name: "Reload Hashicorp Nomad Server"
   ansible.builtin.service:
     name: "{{ nomad_vars_systemd_unit }}"
@@ -41,6 +50,22 @@
   when:
     - "nomad_service_start"
     - "nomad_service_is_client"
+
+- name: "Start Hashicorp Nomad Client for user {{ nomad_vars_system_username }}"
+  ansible.builtin.systemd_service:
+    name: "{{ nomad_vars_systemd_user_client_unit | format(nomad_vars_system_username) }}"
+    enabled: true
+    scope: "user"
+    state: "started"
+  become: true
+  become_user: "{{ nomad_vars_system_username }}"
+  environment:
+    XDG_RUNTIME_DIR: "{{ dirs_runstatedir }}/user/{{ _nomad_vars_system_user_info.uid }}"
+  listen: "service-start"
+  when:
+    - "nomad_service_start"
+    - "nomad_service_is_user_client"
+    - "nomad_vars_system_username != 'root'"
 
 - name: "Start Hashicorp Nomad Server"
   ansible.builtin.service:

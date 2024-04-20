@@ -1,5 +1,5 @@
-# roles/nomad_service/tasks/main.yml
-# ==================================
+# changelogs/fragments/nomad_install-user-client-service.yml
+# ==========================================================
 #
 # Copying
 # -------
@@ -18,14 +18,13 @@
 # You should have received a copy of the MIT License along with
 # *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
 #
-- name: "Gather Nomad facts"
-  ansible.builtin.include_tasks: "facts.yml"
-
-- name: "Configure Hashicorp Nomad"
-  ansible.builtin.include_tasks: "configure.yml"
-
-- name: "Start Hashicorp Nomad service"
-  ansible.builtin.debug:
-    msg: "Start service: {{ nomad_vars_systemd_unit }}"
-  notify: "service-start"
-  changed_when: true
+minor_changes:
+  - |-
+    nomad_install - Allow the Nomad client service to run as a non-root user.
+  - |-
+    nomad_service - Add the configuration variable
+    `nomad_service_is_user_client` to configure a Nomad client running as a
+    non-root user.
+  - |-
+    nomad_vars - Add the configuration variable `nomad_vars_confdir` to specify
+    where Nomad is to find its configuration files.

@@ -22,17 +22,29 @@
   block:
     - name: "Ensure systemd service directory"
       ansible.builtin.file:
-        path: "{{ dirs_prefix }}/lib/systemd/system"
+        path: "{{ dirs_prefix }}/lib/systemd/{{ item }}"
         state: "directory"
         group: "root"
         owner: "root"
         mode: "0755"
         setype: "systemd_unit_file_t"
+      loop:
+        - "system"
+        - "user"
 
     - name: "Install system unit file"
       ansible.builtin.copy:
         content: "{{ lookup('ansible.builtin.template', 'systemd/nomad-client.service.j2') }}"
         dest: "{{ dirs_prefix }}/lib/systemd/system/{{ nomad_vars_package_name }}-client.service"
+        group: "root"
+        owner: "root"
+        mode: "0644"
+        setype: "systemd_unit_file_t"
+
+    - name: "Install user unit file"
+      ansible.builtin.copy:
+        content: "{{ lookup('ansible.builtin.template', 'systemd/nomad-client@.service.j2') }}"
+        dest: "{{ dirs_prefix }}/lib/systemd/user/{{ nomad_vars_package_name }}-client@.service"
         group: "root"
         owner: "root"
         mode: "0644"
