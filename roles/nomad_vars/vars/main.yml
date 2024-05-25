@@ -23,6 +23,12 @@ nomad_vars_systemd_unit: "{{ nomad_vars_package_name }}.service"
 nomad_vars_systemd_client_unit: "{{ nomad_vars_package_name }}-client.service"
 nomad_vars_systemd_user_client_unit: "{{ nomad_vars_package_name }}-client@%s.service"
 
+nomad_vars_config_priority:
+  global: 0
+  server: 100
+  client: 200
+  driver: 300
+
 nomad_vars_directory:
   config: "{{ nomad_vars_confdir }}"
   install: "{{ dirs_bindir }}"

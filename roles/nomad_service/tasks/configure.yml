@@ -50,7 +50,8 @@
 - name: "Install Hashicorp Nomad global configuration"
   ansible.builtin.template:
     src: "nomad/nomad.hcl.j2"
-    dest: "{{ nomad_service_directory_config }}/00-nomad.hcl"
+    dest: >-
+      {{ nomad_service_directory_config }}/{{ '%03d' | format(nomad_vars_config_priority.global) }}-nomad.hcl
     group: "{{ nomad_vars_system_groupname }}"
     owner: "{{ nomad_vars_system_username }}"
     mode: "0640"
@@ -59,7 +60,8 @@
 - name: "Install Hashicorp Nomad server configuration"
   ansible.builtin.template:
     src: "nomad/server.hcl.j2"
-    dest: "{{ nomad_service_directory_config }}/10-server.hcl"
+    dest: >-
+      {{ nomad_service_directory_config }}/{{ '%03d' | format(nomad_vars_config_priority.server) }}-server.hcl
     group: "{{ nomad_vars_system_groupname }}"
     owner: "{{ nomad_vars_system_username }}"
     mode: "0640"
@@ -69,7 +71,8 @@
 - name: "Install Hashicorp Nomad client configuration"
   ansible.builtin.template:
     src: "nomad/client.hcl.j2"
-    dest: "{{ nomad_service_directory_config }}/10-client.hcl"
+    dest: >-
+      {{ nomad_service_directory_config }}/{{ '%03d' | format(nomad_vars_config_priority.client) }}-client.hcl
     group: "{{ nomad_vars_system_groupname }}"
     owner: "{{ nomad_vars_system_username }}"
     mode: "0640"
@@ -79,7 +82,8 @@
 - name: "Install Hashicorp Nomad driver configuration"
   ansible.builtin.template:
     src: "nomad/{{ item }}.hcl.j2"
-    dest: "{{ nomad_service_directory_config }}/50-{{ item }}.hcl"
+    dest: >-
+      {{ nomad_service_directory_config }}/{{ '%03d' | format(nomad_vars_config_priority.driver) }}-{{ item }}.hcl
     group: "{{ nomad_vars_system_groupname }}"
     owner: "{{ nomad_vars_system_username }}"
     mode: "0640"
