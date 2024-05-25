@@ -1,5 +1,5 @@
-# roles/install/handlers/main.yml
-# ===============================
+# changelogs/fragments/install-install_binary_only.yml
+# ====================================================
 #
 # Copying
 # -------
@@ -18,23 +18,8 @@
 # You should have received a copy of the MIT License along with
 # *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
 #
-- name: "Service refresh"
-  ansible.builtin.systemd:
-    daemon_reload: true
-  listen: "service-installed"
-
-- name: "Service restart"
-  when:
-    - "system_package.service.status is defined"
-    - "system_package.service.status.ActiveState == 'active'"
-  ansible.builtin.service:
-    name: "{{ system_package.service.name }}"
-    state: "restarted"
-  listen: "service-installed"
-
-- name: "Workdir cleanup"
-  when: "_package_workdir is defined"
-  ansible.builtin.file:
-    path: "{{ _package_workdir.path }}"
-    state: "absent"
-  listen: "workdir-cleanup"
+minor_changes:
+  - |-
+    install - The role can now only proceed with the binary installation without
+    setting up the environment. This can also be used to install application
+    plugins.

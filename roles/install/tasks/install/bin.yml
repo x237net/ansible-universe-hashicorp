@@ -1,0 +1,44 @@
+# roles/install/tasks/install/bin.yml
+# ===================================
+#
+# Copying
+# -------
+#
+# Copyright (c) 2022 universe.hashicorp authors and contributors.
+#
+# This file is part of the *universe.hashicorp* project.
+#
+# *universe.hashicorp* is a free software project. You can redistribute it
+# and/or modify it following the terms of the MIT License.
+#
+# This software project is distributed *as is*, WITHOUT WARRANTY OF ANY KIND;
+# including but not limited to the WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+# PARTICULAR PURPOSE and NONINFRINGEMENT.
+#
+# You should have received a copy of the MIT License along with
+# *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
+#
+- name: "Install binary"
+  when: "_install_workdir is defined"
+  block:
+    - name: "Copy binary to its final location"
+      ansible.builtin.copy:
+        src: "{{ _install_workdir.path }}/{{ install_package_name }}"
+        dest: "{{ install_package_directory.install }}/{{ install_package_name }}-{{ install_package_version }}"
+        group: "{{ install_system_groupname }}"
+        owner: "{{ install_system_username }}"
+        remote_src: true
+        setype: "bin_t"
+        mode: "0555"
+
+    - name: "Update link to new binary"
+      ansible.builtin.file:
+        path: "{{ install_package_directory.install }}/{{ install_package_name }}"
+        src: "{{ install_package_directory.install }}/{{ install_package_name }}-{{ install_package_version }}"
+        state: "link"
+  rescue:
+    - name: "Cleaning up"
+      ansible.builtin.debug:
+        msg: "Cleaning"
+      notify: "workdir-cleanup"
+      changed_when: true

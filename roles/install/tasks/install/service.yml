@@ -1,0 +1,51 @@
+# roles/install/tasks/install/service.yml
+# =======================================
+#
+# Copying
+# -------
+#
+# Copyright (c) 2022 universe.hashicorp authors and contributors.
+#
+# This file is part of the *universe.hashicorp* project.
+#
+# *universe.hashicorp* is a free software project. You can redistribute it
+# and/or modify it following the terms of the MIT License.
+#
+# This software project is distributed *as is*, WITHOUT WARRANTY OF ANY KIND;
+# including but not limited to the WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+# PARTICULAR PURPOSE and NONINFRINGEMENT.
+#
+# You should have received a copy of the MIT License along with
+# *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
+#
+- name: "Install service"
+  block:
+    - name: "Ensure systemd service directory"
+      ansible.builtin.file:
+        path: "{{ dirs_prefix }}/lib/systemd/system"
+        state: "directory"
+        group: "root"
+        owner: "root"
+        mode: "0755"
+        setype: "systemd_unit_file_t"
+
+    - name: "Install service unit file"
+      ansible.builtin.copy:
+        content: "{{ install_package_service_content }}"
+        dest: "{{ dirs_prefix }}/lib/systemd/system/{{ install_package_name }}.service"
+        group: "root"
+        owner: "root"
+        mode: "0644"
+        setype: "systemd_unit_file_t"
+  rescue:
+    - name: "Cleaning up"
+      ansible.builtin.debug:
+        msg: "Cleaning"
+      notify: "workdir-cleanup"
+      changed_when: true
+
+- name: "Notify systemd"
+  ansible.builtin.debug:
+    msg: "Refresh service"
+  notify: "service-installed"
+  changed_when: true
