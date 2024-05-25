@@ -20,7 +20,12 @@
  #}
 region = "{{ nomad_service_region }}"
 datacenter = "{{ nomad_service_datacenter }}"
+
 data_dir = "{{ nomad_vars_directory.state }}"
+{% if nomad_vars_directory.plugins %}
+plugin_dir = "{{ nomad_vars_directory.plugins }}"
+{% endif %}
+
 disable_update_check = true
 
 {% if nomad_service_bind_address %}

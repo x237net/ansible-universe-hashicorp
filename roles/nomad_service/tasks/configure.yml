@@ -29,6 +29,15 @@
         mode: "0750"
         setype: "etc_t"
 
+    - name: "Create plugins directory"
+      ansible.builtin.file:
+        path: "{{ nomad_vars_directory.plugins }}"
+        state: "directory"
+        group: "root"
+        owner: "root"
+        mode: "0755"
+      when: "nomad_vars_directory.plugins"
+
     - name: "Create state directory"
       ansible.builtin.file:
         path: "{{ nomad_vars_directory.state }}"

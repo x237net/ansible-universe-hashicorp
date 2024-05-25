@@ -56,6 +56,10 @@ The role accepts the following configuration variables:
 : The Gossip protocol port to manage Hashicorp Nomad server membership using
 Serf.
 
+`nomad_vars_pluginsdir` (Default: `null`)
+: Absolute path to the directory where Hashicorp Nomad will look for its
+plugins.
+
 `nomad_vars_statedir` (Default: `{{ dirs_localstatedir }}/nomad`)
 : Directory where the Nomad process keeps its runtime files.
 

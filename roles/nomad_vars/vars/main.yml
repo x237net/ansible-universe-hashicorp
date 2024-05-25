@@ -26,6 +26,7 @@ nomad_vars_systemd_user_client_unit: "{{ nomad_vars_package_name }}-client@%s.se
 nomad_vars_directory:
   config: "{{ nomad_vars_confdir }}"
   install: "{{ dirs_bindir }}"
+  plugins: "{{ nomad_vars_pluginsdir }}"
   state: "{{ nomad_vars_statedir }}"
 
 nomad_vars_port:
