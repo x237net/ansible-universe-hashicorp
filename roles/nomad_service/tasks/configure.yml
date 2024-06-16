@@ -55,7 +55,9 @@
     group: "{{ nomad_vars_system_groupname }}"
     owner: "{{ nomad_vars_system_username }}"
     mode: "0640"
-  notify: "service-reload"
+  notify:
+    - "universe.hashicorp.nomad_handler:client_config_updated"
+    - "universe.hashicorp.nomad_handler:server_config_updated"
 
 - name: "Install Hashicorp Nomad server configuration"
   ansible.builtin.template:
@@ -65,7 +67,7 @@
     group: "{{ nomad_vars_system_groupname }}"
     owner: "{{ nomad_vars_system_username }}"
     mode: "0640"
-  notify: "service-reload"
+  notify: "universe.hashicorp.nomad_handler:server_config_updated"
   when: "nomad_service_is_server"
 
 - name: "Install Hashicorp Nomad client configuration"
@@ -76,7 +78,7 @@
     group: "{{ nomad_vars_system_groupname }}"
     owner: "{{ nomad_vars_system_username }}"
     mode: "0640"
-  notify: "service-reload"
+  notify: "universe.hashicorp.nomad_handler:server_config_updated"
   when: "nomad_service_is_client_mode"
 
 - name: "Install Hashicorp Nomad driver configuration"
@@ -88,7 +90,7 @@
     owner: "{{ nomad_vars_system_username }}"
     mode: "0640"
   loop: "{{ nomad_service_drivers | list }}"
-  notify: "service-reload"
+  notify: "universe.hashicorp.nomad_handler:server_config_updated"
   when:
     - "nomad_service_is_client_mode"
     - "([role_path, 'templates', 'nomad', item ~ '.hcl.j2'] | path_join) is file"

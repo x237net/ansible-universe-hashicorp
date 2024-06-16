@@ -24,8 +24,20 @@
 - name: "Configure Hashicorp Nomad"
   ansible.builtin.include_tasks: "configure.yml"
 
-- name: "Start Hashicorp Nomad service"
+- name: "Start Hashicorp Nomad client service"
   ansible.builtin.debug:
     msg: "Start service: {{ nomad_vars_systemd_unit }}"
-  notify: "service-start"
   changed_when: true
+  notify: "universe.hashicorp.nomad_handler:client_service_start"
+  when:
+    - "nomad_service_start"
+    - "nomad_service_is_client_mode"
+
+- name: "Start Hashicorp Nomad server service"
+  ansible.builtin.debug:
+    msg: "Start service: {{ nomad_vars_systemd_client_unit }}"
+  changed_when: true
+  notify: "universe.hashicorp.nomad_handler:server_service_start"
+  when:
+    - "nomad_service_start"
+    - "nomad_service_is_server"
