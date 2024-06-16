@@ -21,7 +21,8 @@
 - name: "Update Hashicorp Consul configuration"
   ansible.builtin.template:
     src: "consul/config.hcl.j2"
-    dest: "{{ consul_vars_directory.config }}/00-{{ consul_vars_package_name }}.hcl"
+    dest: >-
+      {{ consul_vars_directory.config }}/{{ '%03d' | format(consul_vars_config_priority.global) }}-{{ consul_vars_package_name }}.hcl
     owner: "{{ consul_vars_system_username }}"
     group: "{{ consul_vars_system_groupname }}"
     mode: "0640"

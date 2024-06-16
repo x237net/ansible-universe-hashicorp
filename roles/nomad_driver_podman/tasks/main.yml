@@ -1,5 +1,5 @@
-# roles/nomad_vars/defaults/main.yml
-# ==================================
+# roles/nomad_driver_podman/tasks/main.yml
+# ========================================
 #
 # Copying
 # -------
@@ -18,13 +18,5 @@
 # You should have received a copy of the MIT License along with
 # *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
 #
-nomad_vars_system_username: "{{ nomad_vars_package_name }}"
-nomad_vars_system_groupname: "{{ nomad_vars_system_username }}"
-
-nomad_vars_confdir: "{{ dirs_sysconfdir }}/{{ nomad_vars_package_name }}"
-nomad_vars_pluginsdir: null
-nomad_vars_statedir: "{{ dirs_localstatedir }}/{{ nomad_vars_package_name }}"
-
-nomad_vars_port_http: 4646
-nomad_vars_port_rpc: 4647
-nomad_vars_port_serf: 4648
+- name: "Configure Hashicorp Nomad Podman driver"
+  ansible.builtin.include_tasks: "configure.yml"

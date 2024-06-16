@@ -18,44 +18,79 @@
 # You should have received a copy of the MIT License along with
 # *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
 #
+- name: "Prepare Hashicorp Nomad environment"
+  block:
+    - name: "Create configuration directory"
+      ansible.builtin.file:
+        path: "{{ nomad_service_directory_config }}"
+        state: "directory"
+        group: "{{ nomad_vars_system_groupname }}"
+        owner: "{{ nomad_vars_system_username }}"
+        mode: "0750"
+        setype: "etc_t"
+
+    - name: "Create plugins directory"
+      ansible.builtin.file:
+        path: "{{ nomad_vars_directory.plugins }}"
+        state: "directory"
+        group: "root"
+        owner: "root"
+        mode: "0755"
+      when: "nomad_vars_directory.plugins"
+
+    - name: "Create state directory"
+      ansible.builtin.file:
+        path: "{{ nomad_vars_directory.state }}"
+        state: "directory"
+        group: "{{ nomad_vars_system_groupname }}"
+        owner: "{{ nomad_vars_system_username }}"
+        mode: "0750"
+        setype: "var_t"
+
 - name: "Install Hashicorp Nomad global configuration"
   ansible.builtin.template:
     src: "nomad/nomad.hcl.j2"
-    dest: "{{ nomad_vars_directory.config }}/00-nomad.hcl"
+    dest: >-
+      {{ nomad_service_directory_config }}/{{ '%03d' | format(nomad_vars_config_priority.global) }}-nomad.hcl
     group: "{{ nomad_vars_system_groupname }}"
     owner: "{{ nomad_vars_system_username }}"
     mode: "0640"
-  notify: "service-reload"
+  notify:
+    - "universe.hashicorp.nomad_handler:client_config_updated"
+    - "universe.hashicorp.nomad_handler:server_config_updated"
 
 - name: "Install Hashicorp Nomad server configuration"
   ansible.builtin.template:
     src: "nomad/server.hcl.j2"
-    dest: "{{ nomad_vars_directory.config }}/10-server.hcl"
+    dest: >-
+      {{ nomad_service_directory_config }}/{{ '%03d' | format(nomad_vars_config_priority.server) }}-server.hcl
     group: "{{ nomad_vars_system_groupname }}"
     owner: "{{ nomad_vars_system_username }}"
     mode: "0640"
-  notify: "service-reload"
+  notify: "universe.hashicorp.nomad_handler:server_config_updated"
   when: "nomad_service_is_server"
 
 - name: "Install Hashicorp Nomad client configuration"
   ansible.builtin.template:
     src: "nomad/client.hcl.j2"
-    dest: "{{ nomad_vars_directory.config }}/20-client.hcl"
+    dest: >-
+      {{ nomad_service_directory_config }}/{{ '%03d' | format(nomad_vars_config_priority.client) }}-client.hcl
     group: "{{ nomad_vars_system_groupname }}"
     owner: "{{ nomad_vars_system_username }}"
     mode: "0640"
-  notify: "service-reload"
-  when: "nomad_service_is_client"
+  notify: "universe.hashicorp.nomad_handler:server_config_updated"
+  when: "nomad_service_is_client_mode"
 
 - name: "Install Hashicorp Nomad driver configuration"
   ansible.builtin.template:
     src: "nomad/{{ item }}.hcl.j2"
-    dest: "{{ nomad_vars_directory.config }}/50-{{ item }}.hcl"
+    dest: >-
+      {{ nomad_service_directory_config }}/{{ '%03d' | format(nomad_vars_config_priority.driver) }}-{{ item }}.hcl
     group: "{{ nomad_vars_system_groupname }}"
     owner: "{{ nomad_vars_system_username }}"
     mode: "0640"
   loop: "{{ nomad_service_drivers | list }}"
-  notify: "service-reload"
+  notify: "universe.hashicorp.nomad_handler:server_config_updated"
   when:
-    - "nomad_service_is_client"
+    - "nomad_service_is_client_mode"
     - "([role_path, 'templates', 'nomad', item ~ '.hcl.j2'] | path_join) is file"

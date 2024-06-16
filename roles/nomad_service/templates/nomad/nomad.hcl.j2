@@ -20,7 +20,12 @@
  #}
 region = "{{ nomad_service_region }}"
 datacenter = "{{ nomad_service_datacenter }}"
+
 data_dir = "{{ nomad_vars_directory.state }}"
+{% if nomad_vars_directory.plugins %}
+plugin_dir = "{{ nomad_vars_directory.plugins }}"
+{% endif %}
+
 disable_update_check = true
 
 {% if nomad_service_bind_address %}
@@ -35,9 +40,12 @@ consul {
     auto_advertise = true
     checks_use_advertise = true
 
-    # Enabling the server and client to bootstrap using Consul.
+    {% if nomad_service_is_client %}
     client_auto_join = true
+    {% endif %} {# nomad_service_is_client #}
+    {% if nomad_service_is_server %}
     server_auto_join = true
+    {% endif %} {# nomad_service_is_server #}
 }
 {% endif %} {# nomad_service_use_consul #}
 

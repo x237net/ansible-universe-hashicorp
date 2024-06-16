@@ -1,5 +1,5 @@
-# roles/nomad_install/meta/main.yml
-# =================================
+# roles/nomad_driver_podman/meta/main.yml
+# =======================================
 #
 # Copying
 # -------
@@ -19,14 +19,20 @@
 # *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
 #
 dependencies:
+  - role: "universe.hashicorp.nomad_handler"
   - role: "universe.hashicorp.nomad_vars"
   - role: "universe.hashicorp.install"
     vars:
-      install_system_username: "{{ nomad_vars_system_username }}"
-      install_system_groupname: "{{ nomad_vars_system_groupname }}"
-      install_bindir: "{{ nomad_vars_directory.install }}"
-      install_confdir: "{{ nomad_vars_directory.config }}"
-      install_statedir: "{{ nomad_vars_directory.state }}"
-      install_package_name: "{{ nomad_vars_package_name }}"
-      install_package_service_content: >-
-        {{ lookup('ansible.builtin.template', 'systemd/nomad.service.j2') }}
+      install_bin_only: true
+      install_check_version: false
+      install_force: "{{ nomad_driver_podman_install_force }}"
+      install_bindir: "{{ nomad_vars_directory.plugins }}"
+      install_package_name: "{{ nomad_driver_podman_package_name }}"
+      install_package_version: "{{ nomad_driver_podman_version }}"
+
+galaxy_info:
+  author: "universe.hashicorp authors"
+  description: >-
+    Install and configure the Podman driver for Hashicorp Nomad.
+  license: "MIT"
+  min_ansible_version: "2.15.0"

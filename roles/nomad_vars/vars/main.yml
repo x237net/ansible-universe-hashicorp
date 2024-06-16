@@ -20,10 +20,19 @@
 #
 nomad_vars_package_name: "nomad"
 nomad_vars_systemd_unit: "{{ nomad_vars_package_name }}.service"
+nomad_vars_systemd_client_unit: "{{ nomad_vars_package_name }}-client.service"
+nomad_vars_systemd_user_client_unit: "{{ nomad_vars_package_name }}-client@%s.service"
+
+nomad_vars_config_priority:
+  global: 0
+  server: 100
+  client: 200
+  driver: 300
 
 nomad_vars_directory:
-  config: "{{ dirs_sysconfdir }}/{{ nomad_vars_package_name }}.d"
+  config: "{{ nomad_vars_confdir }}"
   install: "{{ dirs_bindir }}"
+  plugins: "{{ nomad_vars_pluginsdir }}"
   state: "{{ nomad_vars_statedir }}"
 
 nomad_vars_port:

@@ -30,7 +30,9 @@
   register: "_install_package_service"
 
 - name: "Installed package version"
-  when: "_install_package_binary.stat.exists"
+  when:
+    - "install_check_version"
+    - "_install_package_binary.stat.exists"
   ansible.builtin.command:
     cmd: "{{ install_package_directory.install }}/{{ install_package_name }} --version"
   register: "_install_package_version"
@@ -52,3 +54,8 @@
       - "{{ _install_package_binary.stat.exists }}"
       - "{{ _install_package_service }}"
       - "{{ _install_package_version.stdout | default('') }}"
+
+- name: "Installed package information"
+  ansible.builtin.debug:
+    msg: "Installed {{ system_package.name }} v{{ system_package.version }}"
+  when: "system_package.exists"

@@ -1,5 +1,5 @@
-# roles/nomad_vars/defaults/main.yml
-# ==================================
+# roles/nomad_service/vars/main.yml
+# =================================
 #
 # Copying
 # -------
@@ -18,13 +18,10 @@
 # You should have received a copy of the MIT License along with
 # *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
 #
-nomad_vars_system_username: "{{ nomad_vars_package_name }}"
-nomad_vars_system_groupname: "{{ nomad_vars_system_username }}"
+nomad_service_is_client_mode: >-
+  {{ nomad_service_is_user_client | default(nomad_service_is_client, true) }}
 
-nomad_vars_confdir: "{{ dirs_sysconfdir }}/{{ nomad_vars_package_name }}"
-nomad_vars_pluginsdir: null
-nomad_vars_statedir: "{{ dirs_localstatedir }}/{{ nomad_vars_package_name }}"
-
-nomad_vars_port_http: 4646
-nomad_vars_port_rpc: 4647
-nomad_vars_port_serf: 4648
+nomad_service_directory_config: >-
+  {{ nomad_vars_directory.config }}/{{ nomad_service_is_client_mode | ternary('client.d', 'server.d') }}
+nomad_service_api_address: >-
+  {{ nomad_service_use_tls | ternary('https', 'http') }}://{{ nomad_bind_address | default('127.0.0.1') }}:{{ nomad_vars_port_http }}

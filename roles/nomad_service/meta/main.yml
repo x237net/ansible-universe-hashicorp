@@ -19,4 +19,5 @@
 # *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
 #
 dependencies:
+  - role: "universe.hashicorp.nomad_handler"
   - role: "universe.hashicorp.nomad_vars"

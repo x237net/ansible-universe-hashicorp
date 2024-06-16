@@ -1,0 +1,45 @@
+# roles/install/tasks/install/environment.yml
+# ===========================================
+#
+# Copying
+# -------
+#
+# Copyright (c) 2022 universe.hashicorp authors and contributors.
+#
+# This file is part of the *universe.hashicorp* project.
+#
+# *universe.hashicorp* is a free software project. You can redistribute it
+# and/or modify it following the terms of the MIT License.
+#
+# This software project is distributed *as is*, WITHOUT WARRANTY OF ANY KIND;
+# including but not limited to the WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+# PARTICULAR PURPOSE and NONINFRINGEMENT.
+#
+# You should have received a copy of the MIT License along with
+# *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
+#
+- name: "Prepare environment"
+  block:
+    - name: "Create configuration directory"
+      ansible.builtin.file:
+        path: "{{ install_package_directory.config }}"
+        state: "directory"
+        group: "{{ install_system_groupname }}"
+        owner: "{{ install_system_username }}"
+        mode: "0750"
+        setype: "etc_t"
+
+    - name: "Create state directory"
+      ansible.builtin.file:
+        path: "{{ install_package_directory.state }}"
+        state: "directory"
+        group: "{{ install_system_groupname }}"
+        owner: "{{ install_system_username }}"
+        mode: "0750"
+        setype: "var_t"
+  rescue:
+    - name: "Cleaning up"
+      ansible.builtin.debug:
+        msg: "Cleaning"
+      notify: "workdir-cleanup"
+      changed_when: true

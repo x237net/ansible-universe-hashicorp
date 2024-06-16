@@ -43,6 +43,9 @@ The role accepts the following configuration variables:
 
 ### Optional
 
+`nomad_vars_confdir` (Default: `{{ dirs_sysconfdir }}/nomad`)
+: Directory where Nomad keeps its configuration files.
+
 `nomad_vars_port_http` (Default: `4646`)
 : The HTTP port to provide UI and API access to Hashicorp Nomad agents.
 
@@ -53,10 +56,14 @@ The role accepts the following configuration variables:
 : The Gossip protocol port to manage Hashicorp Nomad server membership using
 Serf.
 
-`nomad_vars_statedir` (Default: `{{ dirs_localstatedir }}/{{ nomad_vars_package_name }}`)
-: Directory where the Nomad process keeps it runtime files.
+`nomad_vars_pluginsdir` (Default: `null`)
+: Absolute path to the directory where Hashicorp Nomad will look for its
+plugins.
 
-`nomad_vars_system_username` (Default: `"root"`)
+`nomad_vars_statedir` (Default: `{{ dirs_localstatedir }}/nomad`)
+: Directory where the Nomad process keeps its runtime files.
+
+`nomad_vars_system_username` (Default: `"nomad"`)
 : A user name which will own the binary and installed directories.
 
 `nomad_vars_system_groupname` (Default: `"{{ nomad_vars_system_username }}"`)

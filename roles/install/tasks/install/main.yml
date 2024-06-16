@@ -1,0 +1,40 @@
+# roles/install/tasks/install/main.yml
+# ====================================
+#
+# Copying
+# -------
+#
+# Copyright (c) 2022 universe.hashicorp authors and contributors.
+#
+# This file is part of the *universe.hashicorp* project.
+#
+# *universe.hashicorp* is a free software project. You can redistribute it
+# and/or modify it following the terms of the MIT License.
+#
+# This software project is distributed *as is*, WITHOUT WARRANTY OF ANY KIND;
+# including but not limited to the WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+# PARTICULAR PURPOSE and NONINFRINGEMENT.
+#
+# You should have received a copy of the MIT License along with
+# *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
+#
+- name: "Create package user"
+  ansible.builtin.include_tasks: "user.yml"
+  when: "not install_bin_only"
+
+- name: "Install package's binary"
+  ansible.builtin.include_tasks: "bin.yml"
+
+- name: "Setup package's environment"
+  ansible.builtin.include_tasks: "environment.yml"
+  when: "not install_bin_only"
+
+- name: "Install package's service"
+  ansible.builtin.include_tasks: "service.yml"
+  when:
+    - "not install_bin_only"
+    - "install_package_service_content"
+
+# Call handlers to complete installation.
+- name: "Flush handlers"
+  ansible.builtin.meta: "flush_handlers"

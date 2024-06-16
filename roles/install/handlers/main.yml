@@ -33,7 +33,7 @@
   listen: "service-installed"
 
 - name: "Workdir cleanup"
-  when: "_install_workdir is defined"
+  when: "_package_workdir is defined"
   ansible.builtin.file:
     path: "{{ _package_workdir.path }}"
     state: "absent"

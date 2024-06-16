@@ -1,5 +1,5 @@
-# roles/nomad_service/handlers/main.yml
-# =====================================
+# changelogs/fragments/nomad_install-user-client-service.yml
+# ==========================================================
 #
 # Copying
 # -------
@@ -18,16 +18,13 @@
 # You should have received a copy of the MIT License along with
 # *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
 #
-- name: "Service Reload"
-  ansible.builtin.service:
-    name: "{{ nomad_vars_systemd_unit }}"
-    state: "reloaded"
-  listen: "service-reload"
-
-- name: "Service Start"
-  ansible.builtin.service:
-    name: "{{ nomad_vars_systemd_unit }}"
-    state: "started"
-    enabled: true
-  listen: "service-start"
-  when: "nomad_service_start"
+minor_changes:
+  - |-
+    nomad_install - Allow the Nomad client service to run as a non-root user.
+  - |-
+    nomad_service - Add the configuration variable
+    `nomad_service_is_user_client` to configure a Nomad client running as a
+    non-root user.
+  - |-
+    nomad_vars - Add the configuration variable `nomad_vars_confdir` to specify
+    where Nomad is to find its configuration files.

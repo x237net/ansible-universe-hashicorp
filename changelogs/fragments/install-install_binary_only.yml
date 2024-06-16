@@ -1,5 +1,5 @@
-# roles/nomad_vars/defaults/main.yml
-# ==================================
+# changelogs/fragments/install-install_binary_only.yml
+# ====================================================
 #
 # Copying
 # -------
@@ -18,13 +18,8 @@
 # You should have received a copy of the MIT License along with
 # *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
 #
-nomad_vars_system_username: "{{ nomad_vars_package_name }}"
-nomad_vars_system_groupname: "{{ nomad_vars_system_username }}"
-
-nomad_vars_confdir: "{{ dirs_sysconfdir }}/{{ nomad_vars_package_name }}"
-nomad_vars_pluginsdir: null
-nomad_vars_statedir: "{{ dirs_localstatedir }}/{{ nomad_vars_package_name }}"
-
-nomad_vars_port_http: 4646
-nomad_vars_port_rpc: 4647
-nomad_vars_port_serf: 4648
+minor_changes:
+  - |-
+    install - The role can now only proceed with the binary installation without
+    setting up the environment. This can also be used to install application
+    plugins.

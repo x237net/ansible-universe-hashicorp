@@ -80,6 +80,9 @@ Hashicorp Nomad server.
 : Configures the Hashicorp Nomad agent to operate in server mode to participate
 in scheduling decisions.
 
+`nomad_service_is_user_client` (Default: `false`)
+: Configures the Hashicorp Nomad in client mode as a non-root user.
+
 `nomad_service_pool` (Default: `""`)
 : Specifies the node pool in which the client is registered.
 

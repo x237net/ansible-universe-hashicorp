@@ -1,0 +1,83 @@
+# roles/nomad_handler/handlers/main.yml
+# =====================================
+#
+# Copying
+# -------
+#
+# Copyright (c) 2022 universe.hashicorp authors and contributors.
+#
+# This file is part of the *universe.hashicorp* project.
+#
+# *universe.hashicorp* is a free software project. You can redistribute it
+# and/or modify it following the terms of the MIT License.
+#
+# This software project is distributed *as is*, WITHOUT WARRANTY OF ANY KIND;
+# including but not limited to the WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+# PARTICULAR PURPOSE and NONINFRINGEMENT.
+#
+# You should have received a copy of the MIT License along with
+# *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
+#
+- name: "Reload Hashicorp Nomad Client"
+  ansible.builtin.service:
+    name: "{{ nomad_vars_systemd_client_unit }}"
+    state: "reloaded"
+  listen:
+    - "universe.hashicorp.nomad_handler:client_config_updated"
+    - "universe.hashicorp.nomad_handler:client_service_reload"
+  when: "nomad_service_is_client"
+
+- name: "Reload Hashicorp Nomad Client for user {{ nomad_vars_system_username }}"
+  ansible.builtin.service:
+    name: "{{ nomad_vars_systemd_user_client_unit | format(nomad_vars_system_username) }}"
+    state: "reloaded"
+  become: true
+  become_user: "{{ nomad_vars_system_username }}"
+  environment:
+    XDG_RUNTIME_DIR: "{{ dirs_runstatedir }}/user/{{ _nomad_vars_system_user_info.uid }}"
+  listen:
+    - "universe.hashicorp.nomad_handler:client_config_updated"
+    - "universe.hashicorp.nomad_handler:client_service_reload"
+  when:
+    - "nomad_service_is_user_client"
+    - "nomad_vars_system_username != 'root'"
+
+- name: "Reload Hashicorp Nomad Server"
+  ansible.builtin.service:
+    name: "{{ nomad_vars_systemd_unit }}"
+    state: "reloaded"
+  listen:
+    - "universe.hashicorp.nomad_handler:server_config_updated"
+    - "universe.hashicorp.nomad_handler:server_service_reload"
+  when: "nomad_service_is_server"
+
+- name: "Start Hashicorp Nomad Client"
+  ansible.builtin.service:
+    name: "{{ nomad_vars_systemd_client_unit }}"
+    state: "started"
+    enabled: true
+  listen: "universe.hashicorp.nomad_handler:client_service_start"
+  when: "nomad_service_is_client"
+
+- name: "Start Hashicorp Nomad Client for user {{ nomad_vars_system_username }}"
+  ansible.builtin.systemd_service:
+    name: "{{ nomad_vars_systemd_user_client_unit | format(nomad_vars_system_username) }}"
+    enabled: true
+    scope: "user"
+    state: "started"
+  become: true
+  become_user: "{{ nomad_vars_system_username }}"
+  environment:
+    XDG_RUNTIME_DIR: "{{ dirs_runstatedir }}/user/{{ _nomad_vars_system_user_info.uid }}"
+  listen: "universe.hashicorp.nomad_handler:client_service_start"
+  when:
+    - "nomad_service_is_user_client"
+    - "nomad_vars_system_username != 'root'"
+
+- name: "Start Hashicorp Nomad Server"
+  ansible.builtin.service:
+    name: "{{ nomad_vars_systemd_unit }}"
+    state: "started"
+    enabled: true
+  listen: "universe.hashicorp.nomad_handler:server_service_start"
+  when: "nomad_service_is_server"
