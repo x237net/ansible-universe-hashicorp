@@ -22,34 +22,78 @@ ancestor: null
 releases:
   0.1.0:
     changes:
-      release_summary: >-
+      release_summary: |-
         First release of the ``universe.hashicorp`` collection. Everything
         must be considered early stage and not yet ready for production.
     release_date: "2024-01-01"
   0.2.0:
     changes:
-      release_summary: >-
+      release_summary: |-
         Fixup of a few issues.
       major_changes:
-        - >-
+        - |-
           consul_install - systemd service has been changed to run Hashicorp
           Consul with protected ``/home`` and read-only system folders.
-        - >-
+        - |-
           nomad_service - Removed dependency on ``consul_install``. Users must
           now manually install Hashicorp Consul and set the variable
           ``nomad_service_use_consul`` to ``true``.
       minor_changes:
-        - >-
+        - |-
           install - Now accept ``install_bindir``, ``install_confdir``, and
           ``install_statedir`` variables to specify respectively installation
           directories for binaries, configuration and runtime files of the
           Hashicorp package.
-        - >-
+        - |-
           consul_vars - Added the ``consul_vars_statedir`` variable to
           configure runtime files location for Hashicorp Consul.
-        - >-
+        - |-
           nomad_vars - Added the ``nomad_vars_statedir`` variable to
           configure runtime files location for Hashicorp Nomad.
     release_date: "2024-03-06"
   0.2.1:
     release_date: "2024-03-06"
+  0.3.0:
+    changes:
+      release_summary: |-
+        Refactor Nomad roles to allow for Nomad drivers installation and to run
+        Hashicorp Nomad clients as non-privileged users.
+      major_changes:
+        - |-
+          nomad_handler - Move Nomad handlers to a dedicated role so that all
+          other roles can benefit from them.
+        - |-
+          nomad_install - The Nomad service is now divided between client and
+          server. The ``nomad.service`` unit starts a Nomad server while the
+          ``nomad-client.service`` unit starts a Nomad client.
+      minor_changes:
+        - |-
+          install - The role can now only proceed with the binary installation
+          without setting up the environment. This can also be used to install
+          application plugins.
+        - |-
+          nomad_driver_podman - Add a role to install and configure the
+          `Podman <https://developer.hashicorp.com/nomad/plugins/drivers/podman>`_
+          driver for Hashicorp Nomad.
+        - |-
+          nomad_install - Allow the Nomad client service to run as a non-root
+          user.
+        - |-
+          nomad_service - Add the configuration variable
+          `nomad_service_is_user_client` to configure a Nomad client running as
+          a non-root user.
+        - |-
+          nomad_vars - Add the configuration variable `nomad_vars_confdir` to
+          specify where Nomad is to find its configuration files.
+        - |-
+          nomad_vars - The `nomad_vars_pluginsdir` variable can be used to
+          configure the directory where Hashicorp Nomad will look for its
+          plugins.
+    fragments:
+      - "install-install_binary_only.yml"
+      - "nomad_driver_podman-role.yml"
+      - "nomad_handler-role.yml"
+      - "nomad_install-split-client-server.yml"
+      - "nomad_install-user-client-service.yml"
+      - "nomad_vars-plugins_directory_variable.yml"
+    release_date: "2024-06-16"
