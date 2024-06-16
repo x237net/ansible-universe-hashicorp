@@ -1,0 +1,29 @@
+# roles/nomad_driver_podman/tasks/configure.yml
+# =============================================
+#
+# Copying
+# -------
+#
+# Copyright (c) 2022 universe.hashicorp authors and contributors.
+#
+# This file is part of the *universe.hashicorp* project.
+#
+# *universe.hashicorp* is a free software project. You can redistribute it
+# and/or modify it following the terms of the MIT License.
+#
+# This software project is distributed *as is*, WITHOUT WARRANTY OF ANY KIND;
+# including but not limited to the WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+# PARTICULAR PURPOSE and NONINFRINGEMENT.
+#
+# You should have received a copy of the MIT License along with
+# *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
+#
+- name: "Install Hashicorp Nomad Podman driver configuration"
+  ansible.builtin.template:
+    src: "nomad/podman.hcl.j2"
+    dest: >-
+      {{ nomad_vars_directory.config }}/{{ '%03d' | format(nomad_vars_config_priority.driver) }}-{{ nomad_driver_podman_package_name }}.hcl
+    group: "{{ nomad_vars_system_groupname }}"
+    owner: "{{ nomad_vars_system_username }}"
+    mode: "0640"
+  notify: "universe.hashicorp.nomad_handler:client_config_updated"

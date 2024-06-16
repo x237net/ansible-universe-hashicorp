@@ -1,0 +1,29 @@
+# roles/nomad_driver_podman/defaults/main.yml
+# ===========================================
+#
+# Copying
+# -------
+#
+# Copyright (c) 2022 universe.hashicorp authors and contributors.
+#
+# This file is part of the *universe.hashicorp* project.
+#
+# *universe.hashicorp* is a free software project. You can redistribute it
+# and/or modify it following the terms of the MIT License.
+#
+# This software project is distributed *as is*, WITHOUT WARRANTY OF ANY KIND;
+# including but not limited to the WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+# PARTICULAR PURPOSE and NONINFRINGEMENT.
+#
+# You should have received a copy of the MIT License along with
+# *universe.hashicorp*. If not, see <http://opensource.org/licenses/MIT>.
+#
+nomad_driver_podman_version: "0.5.2"
+nomad_driver_podman_install_force: false
+
+nomad_driver_podman_client_http_timeout: "60s"
+nomad_driver_podman_disable_log_collection: false
+nomad_driver_podman_gc_container: true
+nomad_driver_podman_socket_path: null
+nomad_driver_podman_volumes_enabled: true
+nomad_driver_podman_volumes_selinux_label: "z"
