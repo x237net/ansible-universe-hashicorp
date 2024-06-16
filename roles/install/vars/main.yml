@@ -20,6 +20,7 @@
 #
 install_package_arch_map:
   x86_64: "amd64"
+  aarch64: "arm64"
 
 install_package_base_url: "https://releases.hashicorp.com/{{ install_package_name }}"
 install_package_check_url: "https://checkpoint-api.hashicorp.com/v1/check/{{ install_package_name }}"
